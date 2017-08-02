@@ -7,11 +7,12 @@ if not suffix == '.dat':
     suffix = '_' + suffix
 
 efit_file_name = sys.argv[2]
+ktheta_cm = 0.65
 
 pars = init_read_parameters(suffix)
 
 geom_type, geom_pars, geom_coeff = init_read_geometry(suffix, pars)
 
-ky_fluxsurface = ky(pars, geom_coeff, True)
+ky_fluxsurface = ky(pars, geom_coeff, ktheta_cm, True)
 
 print suffix, efit_file_name

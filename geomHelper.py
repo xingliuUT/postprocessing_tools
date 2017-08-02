@@ -26,7 +26,7 @@ def local_grid_points(geom_coeff, show_plots = False):
 
     return R, Z
 
-def ky(pars, geom_coeff, show_plots = False):
+def ky(pars, geom_coeff, ktheta_cm = 1., show_plots = False):
 
     ggxx = geom_coeff['ggxx']
     ggxy = geom_coeff['ggxy']
@@ -36,11 +36,14 @@ def ky(pars, geom_coeff, show_plots = False):
 
     kymin = pars['kymin']
     ky = np.sqrt(gamma1/ggxx)*kymin
+    ky /= ky[pars['nz0']/2]
+    ky *= ktheta_cm * 100.
+
 
     R, Z = local_grid_points(geom_coeff, show_plots)
 
     if show_plots:
-        plt.plot(ky,label='ky')
+        plt.plot(ky,label='ky (1/m)')
         plt.legend()
         plt.show()
 
