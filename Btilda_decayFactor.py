@@ -12,4 +12,6 @@ pars = init_read_parameters(suffix)
 
 geom_type, geom_pars, geom_coeff = init_read_geometry(suffix, pars)
 
+ky_fluxsurface = ky(pars, geom_coeff, True)
+
 print suffix, efit_file_name
