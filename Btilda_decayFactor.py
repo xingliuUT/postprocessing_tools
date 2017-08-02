@@ -1,6 +1,7 @@
 import sys
 from parIOHelper import *
 from geomHelper import *
+import numpy as np
 
 suffix = sys.argv[1]
 if not suffix == '.dat':
@@ -62,5 +63,6 @@ for i in range(len(R)):
         minZ = Z[i]
         minInd = i
 print 'Point on flux surface minimizes ky * d to the Mirnov Probe is:\n({:.4f}, {:.4f})'.format(minR, minZ)
-print 'Its ky * d is {:.4f} '.format(minArg)
+decayFactor = np.exp(-minArg)
+print 'Its ky * d is {:.4f}, decay factor is {:.4f}'.format(minArg, decayFactor)
 #print 'index =', minInd
