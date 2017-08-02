@@ -7,7 +7,8 @@ if not suffix == '.dat':
     suffix = '_' + suffix
 
 efit_file_name = sys.argv[2]
-ktheta_cm = 0.65
+#ktheta_cm = 0.65
+ktheta_cm = -1.
 
 pars = init_read_parameters(suffix)
 
