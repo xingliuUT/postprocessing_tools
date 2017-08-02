@@ -7,6 +7,7 @@ if not suffix == '.dat':
     suffix = '_' + suffix
 
 efit_file_name = sys.argv[2]
+
 ktheta_cm = 0.65
 calcRZ = False # calculate Mirnov coil pos. based on exp.
 
@@ -14,7 +15,7 @@ pars = init_read_parameters(suffix)
 
 geom_type, geom_pars, geom_coeff = init_read_geometry(suffix, pars)
 
-R, Z = local_grid_points(geom_coeff, True)
+R, Z = local_grid_points(geom_coeff, False)
 
 ky_fluxsurface = ky(pars, geom_coeff, ktheta_cm, False)
 
@@ -31,4 +32,35 @@ else:    # if the probe's position at LCFS is found
     mirnovZ = 0.1015
 print('Mirnov probe is at ({:.4f}, {:.4f})'.format(mirnovR, mirnovZ))
 
-print suffix, efit_file_name
+# go along the surface to find the point closest to Mirnov Probe
+minDist = 99.
+for i in range(len(R)):
+    if calcRZ:
+        dist = np.sqrt((R[i]-mirnovR)**2 + (Z[i]-mirnovZ)**2)+ 0.02
+    else:
+        dist = np.sqrt((R[i]-mirnovR)**2 + (Z[i]-mirnovZ)**2)
+    if dist < minDist:
+        minDist = dist
+        minDR = R[i]
+        minDZ = Z[i]
+        minDInd = i
+print 'Point on flux surface closest to the Mirnov Probe is:\n({:.4f}, {:.4f})'.format(minDR, minDZ)
+print 'Its ky * d is {:.4f} '.format(minDist * ky_fluxsurface[minDInd])
+#print 'index =', minDInd
+
+# go along the surface to find the point with minimum ky*distance
+minArg = 99.
+for i in range(len(R)):
+    if calcRZ:
+        dist = np.sqrt((R[i]-mirnovR)**2 + (Z[i]-mirnovZ)**2)+ 0.02
+    else:
+        dist = np.sqrt((R[i]-mirnovR)**2 + (Z[i]-mirnovZ)**2)
+    kyD = ky_fluxsurface[i] * dist
+    if kyD < minArg:
+        minArg = kyD
+        minR = R[i]
+        minZ = Z[i]
+        minInd = i
+print 'Point on flux surface minimizes ky * d to the Mirnov Probe is:\n({:.4f}, {:.4f})'.format(minR, minZ)
+print 'Its ky * d is {:.4f} '.format(minArg)
+#print 'index =', minInd
