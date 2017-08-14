@@ -5,23 +5,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 from fieldlib import *
 
-def global_eigenfunctions(pars,suffix,show_plots,setTime=-1):
+def global_eigenfunctions(pars, \
+                          suffix, \
+                          kyInd = 0, \
+                          show_plots = True, \
+                          setTime=-1):
 
     field = fieldfile('field'+suffix,pars)
 
     if (setTime == -1):
         field.set_time(field.tfld[setTime])
-        print 'Reading eigenfunctions are at t = ', field.tfld[setTime]
+        time = field.tfld[setTime]
     else:
         isetTime = np.argmin(abs(np.array(field.tfld)-setTime))
         field.set_time(field.tfld[isetTime])
-        print 'Reading eigenfunctions are at t = ', field.tfld[isetTime]
+        time = field.tfld[isetTime]
+    print 'Reading eigenfunctions are at t = ', time
 
     phi = np.zeros((field.nz, field.nx), dtype='complex128')
     apar = np.zeros((field.nz, field.nx), dtype='complex128')
 
-    phi = field.phi()[:,0,:]
-    apar = field.apar()[:,0,:]
+    phi = field.phi()[:, kyInd,:]
+    apar = field.apar()[:, kyInd,:]
 
     dz = 2.0/field.nz
     zgrid = np.arange(field.nz)/float(field.nz-1)*(2.0-dz)-1.0
@@ -52,6 +57,7 @@ def global_eigenfunctions(pars,suffix,show_plots,setTime=-1):
         plt.contourf(xgrid,zgrid,np.imag(phi),70)
         plt.colorbar()
         plt.tight_layout()
+        plt.suptitle('time =' + str(np.round(time,1)) + ', ky index =' + str(kyInd))
         plt.show()
     if show_plots:
         plt.figure(figsize=(6.,8.))
@@ -75,6 +81,7 @@ def global_eigenfunctions(pars,suffix,show_plots,setTime=-1):
         plt.contourf(xgrid,zgrid,np.imag(apar),70)
         plt.colorbar()
         plt.tight_layout()
+        plt.suptitle('time =' + str(np.round(time,1)) + ', ky index =' + str(kyInd))
         plt.show()
 
     return phi, apar

@@ -16,5 +16,7 @@ pars = init_read_parameters(suffix)
 nz = pars['nz0']
 nx = pars['nx0']
 show_plots = True
-phi, apar = global_eigenfunctions(pars,suffix,show_plots,setTime=-1)
+kygrid = range(0, pars['nky0'])
+for ky in kygrid:
+    phi, apar = global_eigenfunctions(pars,suffix,ky,show_plots,setTime=-1)
 
