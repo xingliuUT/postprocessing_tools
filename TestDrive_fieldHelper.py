@@ -27,13 +27,16 @@ else:
 
 show_plots = True
 #kygrid = range(0, pars['nky0'])
-kygrid = [5]
+kygrid = [5, 6]
 for ky in kygrid:
     time, phi, apar = global_eigenfunctions(pars,suffix,ky,show_plots,setTime=-1)
     if show_plots:
         title = 'time =' + str(np.round(time,1)) + ', ky index =' + str(ky)
-        filename = 'graph01.ps'
-        #doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'display')
+        filename = 'phi_Apar_ky='+str(ky)+'.ps'
         doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'ps')
-#    dens, tperp = global_moments(pars,suffix,ky,show_plots,setTime=-1)
+    time, dens, tperp = global_moments(pars,suffix,ky,show_plots,setTime=-1)
+    if show_plots:
+        title = 'time =' + str(np.round(time,1)) + ', ky index =' + str(ky)
+        filename = 'dens_Tperp_ky='+str(ky)+'.ps'
+        doublePlot2D(xgrid, zgrid, dens, tperp, 'n', 'Tperp', title, filename, 'ps')
 
