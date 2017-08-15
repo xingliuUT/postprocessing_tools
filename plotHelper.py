@@ -3,7 +3,11 @@ from pylab import rcParams
 
 import numpy as np
 
-def doublePlot2D(xgrid, zgrid, field1, field2, name1, name2, bigtitle, filename, output = 'display'):
+def doublePlot2D(xgrid, zgrid, \
+                 field1, field2, \
+                 name1, name2, \
+                 bigtitle, filename, \
+                 output = 'display'):
 
     rcParams['figure.figsize'] = 8., 8.
     plt.figure()

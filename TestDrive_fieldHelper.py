@@ -15,6 +15,8 @@ if not suffix =='.dat':
    suffix = '_'+suffix
 
 pars = init_read_parameters(suffix)
+field = fieldfile('field'+suffix,pars)
+momen = momfile('mom_e'+suffix,pars)
 
 nz = pars['nz0']
 nx = pars['nx0']
@@ -26,15 +28,34 @@ else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
 show_plots = True
+
+ky = 5
+if 1 == 0:
+    tStart = 350.
+    tEnd = 390.
+    phi, apar = t_avg_global_eigenfns(field,ky,tStart,tEnd)
+    if show_plots:
+        title = 'time=' + str(tStart) + '~' + str(tEnd) + ', ky index =' + str(ky)
+        filename = 't_avg_phi_Apar_ky='+str(ky)+'.ps'
+        doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'ps')
+if 1 == 1:
+    tStart = 350.
+    tEnd = 390.
+    dens, tperp = t_avg_global_moms(momen,ky,tStart,tEnd)
+    if show_plots:
+        title = 'time=' + str(tStart) + '~' + str(tEnd) + ', ky index =' + str(ky)
+        filename = 't_avg_dens_Tperp_ky='+str(ky)+'.ps'
+        doublePlot2D(xgrid, zgrid, dens, tperp, 'dens', 'tperp', title, filename, 'ps')
+
+if 1 == 0:
 #kygrid = range(0, pars['nky0'])
-kygrid = [5, 6]
-for ky in kygrid:
-    time, phi, apar = global_eigenfunctions(pars,suffix,ky,show_plots,setTime=-1)
+#for ky in kygrid:
+    time, phi, apar = global_eigenfunctions(field,ky,setTime=-1)
     if show_plots:
         title = 'time =' + str(np.round(time,1)) + ', ky index =' + str(ky)
         filename = 'phi_Apar_ky='+str(ky)+'.ps'
         doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'ps')
-    time, dens, tperp = global_moments(pars,suffix,ky,show_plots,setTime=-1)
+    time, dens, tperp = global_moments(momen,ky,setTime=-1)
     if show_plots:
         title = 'time =' + str(np.round(time,1)) + ', ky index =' + str(ky)
         filename = 'dens_Tperp_ky='+str(ky)+'.ps'
