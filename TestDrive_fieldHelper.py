@@ -6,6 +6,7 @@ import numpy as np
 from fieldHelper import *
 from momHelper import *
 from parIOHelper import *
+from plotHelper import *
 import sys
 
 suffix = sys.argv[1]
@@ -14,12 +15,25 @@ if not suffix =='.dat':
    suffix = '_'+suffix
 
 pars = init_read_parameters(suffix)
+
 nz = pars['nz0']
 nx = pars['nx0']
+dz = 2.0/nz
+zgrid = np.arange(nz)/float(nz-1)*(2.0-dz)-1.0
+if 'lx_a' in pars:
+    xgrid = np.arange(nx)/float(nx-1)*pars['lx_a']+pars['x0']-pars['lx_a']/2.0
+else:
+    xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
+
 show_plots = True
 #kygrid = range(0, pars['nky0'])
-kygrid = range(5, 7)
+kygrid = [5]
 for ky in kygrid:
-#    phi, apar = global_eigenfunctions(pars,suffix,ky,show_plots,setTime=-1)
-    dens, tperp = global_moments(pars,suffix,ky,show_plots,setTime=-1)
+    time, phi, apar = global_eigenfunctions(pars,suffix,ky,show_plots,setTime=-1)
+    if show_plots:
+        title = 'time =' + str(np.round(time,1)) + ', ky index =' + str(ky)
+        filename = 'graph01.ps'
+        #doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'display')
+        doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'ps')
+#    dens, tperp = global_moments(pars,suffix,ky,show_plots,setTime=-1)
 
