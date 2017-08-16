@@ -16,7 +16,7 @@ def global_moments(momen, \
     #    isetTime = np.argmin(abs(np.array(momen.tmom)-setTime))
     #    momen.set_time(momen.tmom[isetTime])
     #    time = momen.tmom[isetTime]
-    print 'Reading momentss are at t = ', time
+    print 'Reading moments are at t = ', time
 
     nz = momen.pars['nz0']
     nx = momen.pars['nx0']
@@ -25,8 +25,8 @@ def global_moments(momen, \
     tperp = np.zeros((nz,nx),dtype='complex128')
 
     
-    deln = momen.dens()[:,kyInd,:]
-    tperp = momen.tperp()[:,kyInd,:]
+    deln = momen.dens()[0 : nz, kyInd, 0 : nx]
+    tperp = momen.tperp()[0 : nz, kyInd, 0 : nx]
 
     return time, deln, tperp
 

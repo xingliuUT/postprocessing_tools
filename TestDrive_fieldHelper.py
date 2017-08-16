@@ -16,9 +16,9 @@ if not suffix =='.dat':
 
 pars = init_read_parameters(suffix)
 field = fieldfile('field'+suffix,pars)
-field_step_time(field)
+#field_step_time(field)
 momen = momfile('mom_e'+suffix,pars)
-momen_step_time(momen)
+#momen_step_time(momen)
 
 nz = pars['nz0']
 nx = pars['nx0']
@@ -30,16 +30,17 @@ else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
 show_plots = True
+plot_format = 'display'
 
 ky = 5
-if 1 == 0:
+if 1 == 1:
     tStart = 350.
     tEnd = 390.
     phi, apar = t_avg_global_eigenfns(field,ky,tStart,tEnd)
     if show_plots:
         title = 'time=' + str(tStart) + '~' + str(tEnd) + ', ky index =' + str(ky)
         filename = 't_avg_phi_Apar_ky='+str(ky)+'.ps'
-        doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'ps')
+        doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, plot_format)
 if 1 == 1:
     tStart = 350.
     tEnd = 390.
@@ -47,7 +48,7 @@ if 1 == 1:
     if show_plots:
         title = 'time=' + str(tStart) + '~' + str(tEnd) + ', ky index =' + str(ky)
         filename = 't_avg_dens_Tperp_ky='+str(ky)+'.ps'
-        doublePlot2D(xgrid, zgrid, dens, tperp, 'dens', 'tperp', title, filename, 'ps')
+        doublePlot2D(xgrid, zgrid, dens, tperp, 'dens', 'tperp', title, filename, plot_format)
 
 if 1 == 0:
 #kygrid = range(0, pars['nky0'])

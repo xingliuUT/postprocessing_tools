@@ -19,11 +19,14 @@ def global_eigenfunctions(field, \
 #        time = field.tfld[isetTime]
     print 'Reading eigenfunctions are at t = ', time
 
-    phi = np.zeros((field.nz, field.nx), dtype='complex128')
-    apar = np.zeros((field.nz, field.nx), dtype='complex128')
+    nz = field.nz
+    nx = field.nx
 
-    phi = field.phi()[:, kyInd,:]
-    apar = field.apar()[:, kyInd,:]
+    phi = np.zeros((nz, nx), dtype='complex128')
+    apar = np.zeros((nz, nx), dtype='complex128')
+
+    phi = field.phi()[0 : nz, kyInd, 0 : nx]
+    apar = field.apar()[0 : nz, kyInd, 0 : nx]
 
     return time, phi, apar
 
