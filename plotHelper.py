@@ -55,3 +55,43 @@ def doublePlot2D(xgrid, zgrid, \
     elif output == 'ps':
         fig=plt.gcf()
         fig.savefig(filename, format = 'ps', bbox_inches = 'tight')
+
+def doublePlot1D(xgrid, \
+                 field1, field2, \
+                 name1, name2, \
+                 bigtitle, filename, \
+                 output = 'display'):
+    rcParams['figure.figsize'] = 8., 8.
+    plt.figure()
+
+    plt.subplot(3,2,1)
+    plt.xlabel(r'$\rho_{tor}$',fontsize=13)
+    plt.title('abs ' + name1)
+    plt.plot(xgrid,np.abs(field1))
+    plt.subplot(3,2,3)
+    plt.xlabel(r'$\rho_{tor}$',fontsize=13)
+    plt.title('real ' + name1)
+    plt.plot(xgrid,np.real(field1))
+    plt.subplot(3,2,5)
+    plt.xlabel(r'$\rho_{tor}$',fontsize=13)
+    plt.title('imag ' + name1)
+    plt.plot(xgrid,np.imag(field1))
+    plt.subplot(3,2,2)
+    plt.xlabel(r'$\rho_{tor}$',fontsize=13)
+    plt.title('abs ' + name2)
+    plt.plot(xgrid,np.abs(field2))
+    plt.subplot(3,2,4)
+    plt.xlabel(r'$\rho_{tor}$',fontsize=13)
+    plt.title('real ' + name2)
+    plt.plot(xgrid,np.real(field2))
+    plt.subplot(3,2,6)
+    plt.xlabel(r'$\rho_{tor}$',fontsize=13)
+    plt.title('imag ' + name2)
+    plt.plot(xgrid,np.imag(field2))
+    plt.tight_layout()
+    plt.suptitle(bigtitle)
+    if output == 'display':
+        plt.show()
+    elif output == 'ps':
+        fig=plt.gcf()
+        fig.savefig(filename, format = 'ps', bbox_inches = 'tight')
