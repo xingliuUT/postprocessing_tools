@@ -32,8 +32,23 @@ else:
 show_plots = True
 plot_format = 'display'
 
-ky = 5
+kygrid = range(0, pars['nky0'])
 if 1 == 1:
+    time, phi, apar = reflectometer(field, nz / 2, kygrid, -1)
+    if show_plots:
+        title = 'time =' + str(np.round(time,1)) + ' all ky\'s'
+        filename = 'reflectometer_phi_Apar.ps'
+        doublePlot1D(xgrid, phi, apar, 'phi', 'apar', title, filename, plot_format)
+#ky = 5
+
+#for ky in kygrid:
+if 1 == 0:
+    time, phi, apar = global_eigenfunctions(field, nz / 2, ky, -1, setTime=-1)
+    if show_plots:
+        title = 'time =' + str(np.round(time,1)) + ', ky index =' + str(ky)
+        filename = 'phi_Apar_ky='+str(ky)+'.ps'
+        doublePlot1D(xgrid, phi, apar, 'phi', 'apar', title, filename, plot_format)
+if 1 == 0:
     tStart = 350.
     tEnd = 390.
     phi, apar = t_avg_global_eigenfns(field,ky,tStart,tEnd)
@@ -41,7 +56,7 @@ if 1 == 1:
         title = 'time=' + str(tStart) + '~' + str(tEnd) + ', ky index =' + str(ky)
         filename = 't_avg_phi_Apar_ky='+str(ky)+'.ps'
         doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, plot_format)
-if 1 == 1:
+if 1 == 0:
     tStart = 350.
     tEnd = 390.
     dens, tperp = t_avg_global_moms(momen,ky,tStart,tEnd)
