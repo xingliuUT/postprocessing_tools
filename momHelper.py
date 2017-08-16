@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from momlib import *
+from windowFFT import *
 
 def global_moments(momen, \
                    zInd, \
@@ -17,12 +18,15 @@ def global_moments(momen, \
     nx = momen.pars['nx0']
     deln = np.zeros((nz,nx),dtype='complex128')
     tperp = np.zeros((nz,nx),dtype='complex128')
-    if zInd == -1 and xInd == -1: 
+    if zInd == -1 and kyInd != -1 and xInd == -1: 
         deln = momen.dens()[0 : nz, kyInd, 0 : nx]
         tperp = momen.tperp()[0 : nz, kyInd, 0 : nx]
-    elif xInd == -1:
+    elif zInd != -1 and kyInd != -1 and  xInd == -1:
         deln = momen.dens()[zInd, kyInd, 0 : nx]
         tperp = momen.tperp()[zInd, kyInd, 0 : nx]
+    elif zInd != -1 and kyInd == -1 and  xInd != -1:
+        deln = momen.dens()[zInd, :, xInd]
+        tperp = momen.tperp()[zInd, :, xInd]
     return time, deln, tperp
 
 def t_avg_global_moms(momen, \
@@ -55,7 +59,7 @@ def momen_step_time(momen, \
         plt.title('dens, Tperp')
         plt.ylabel('step time (Lref / cref)')
         plt.show()
-def momen_reflectometer(momen, \
+def momen_tx(momen, \
                   zInd, \
                   kygrid, \
                   xInd, \
@@ -82,3 +86,11 @@ def momen_reflectometer(momen, \
         tperp_tx[timeInd - itStart, :] = tperp_x.reshape(1, nx)
         tgrid.append(time)
     return tgrid, deln_tx, tperp_tx
+def momen_fx(field_tx, tgrid, nf, lf):
+    tsteps, nx = np.shape(field_tx)
+    field_fx = np.zeros((nf, nx), dtype='complex128')
+    for i in range(nx):
+        fgrid, field_f = windowFFT(np.array(tgrid), field_tx[:,i], nf, lf, str(i/float(nx)))
+        field_fx[:, i] = field_f.reshape(nf)
+    return fgrid, field_fx
+

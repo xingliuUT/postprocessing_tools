@@ -31,33 +31,40 @@ else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
 show_plots = True
-plot_format = 'display'
+#plot_format = 'display'
+plot_format = 'ps'
 nf = 200
-lf = 1.
+lf = 10.
 
 tStart = 350.
 tEnd = 390.
-#kygrid = range(0, pars['nky0'])
-kygrid = [0]
+kygrid = range(0, pars['nky0'])
+#kygrid = [0]
 if 1 == 1:
-    tgrid, dens, tperp = momen_reflectometer(momen, nz / 2, kygrid, -1, tStart, tEnd)
-    for i in range(nx/2, nx, 16):
-#    if 1 == 0:
-        windowFFT(np.array(tgrid), dens[:,i], nf, lf, 'dens, x ='+str(xgrid[i]))
-        windowFFT(np.array(tgrid), tperp[:,i], nf, lf, 'Tperp, x ='+str(xgrid[i]))
+    tgrid, dens, tperp = momen_tx(momen, nz / 2, kygrid, -1, tStart, tEnd)
+#    for i in range(nx/2, nx, 16):
+    if 1 == 0:
+        f_grid, dens_f = windowFFT(np.array(tgrid), dens[:,i], nf, lf, 'dens, x ='+str(xgrid[i]))
+        f_grid, tperp_f = windowFFT(np.array(tgrid), tperp[:,i], nf, lf, 'Tperp, x ='+str(xgrid[i]))
     if 1 == 1:
         title = 'xgrid: time, ygrid: x, all ky\'s added'
-        filename = 'reflectometer_dens_tperp.ps'
+        filename = 'tx_dens_tperp.ps'
         doublePlot2D(xgrid, tgrid, dens, tperp, 'dens', 'tperp', title, filename, 'rhot', 't', plot_format)
+        fgrid, dens_fx = momen_fx(dens, tgrid, nf, lf)
+        fgrid, tperp_fx = momen_fx(tperp, tgrid, nf, lf)
+        title = 'xgrid: frequency, ygrid: x, all ky\'s added'
+        filename = 'fx_dens_tperp.ps'
+        doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'dens', 'tperp', title, filename, 'rhot', 't', plot_format)
+
 if 1 == 0:
-    tgrid, phi, apar = field_reflectometer(field, nz / 2, kygrid, -1, tStart, tEnd)
+    tgrid, phi, apar = field_tx(field, nz / 2, kygrid, -1, tStart, tEnd)
     for i in range(nx):
 #    if 1 == 0:
         windowFFT(np.array(tgrid), phi[:,i], 'phi, x ='+str(xgrid[i]))
         windowFFT(np.array(tgrid), apar[:,i], 'apar, x ='+str(xgrid[i]))
     if 1 == 1:
         title = 'xgrid: time, ygrid: x, all ky\'s added'
-        filename = 'reflectometer_phi_Apar.ps'
+        filename = 'tx_phi_Apar.ps'
         #for i in range(len(tgrid)):
         #    title = 'all ky\'s added, time =' + str(tgrid[i])
         #    doublePlot1D(xgrid, phi[i,:], apar[i,:], 'phi', 'apar', title, filename, plot_format)

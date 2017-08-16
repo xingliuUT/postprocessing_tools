@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 zi = complex(0, 1)
 
-def windowFFT(tgrid, field, nf, lf, tt, show_plots = True):
+def windowFFT(tgrid, field, nf, lf, tt, show_plots = False):
     nf = int(nf)
     lf = float(lf)
     tgrid_n = (tgrid - tgrid[0]) / (tgrid[-1] - tgrid[0])
@@ -27,4 +27,4 @@ def windowFFT(tgrid, field, nf, lf, tt, show_plots = True):
         plt.plot(fgrid, np.imag(field_f), '+-')
         plt.title(tt)
         plt.show()
-
+    return fgrid, field_f
