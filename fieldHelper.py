@@ -53,20 +53,27 @@ def field_step_time(field, \
 def reflectometer(field, \
                   zInd, \
                   kygrid, \
-                  xInd):
-                  #tStart, \
-                  #tEnd):
+                  xInd, \
+                  tStart, \
+                  tEnd):
 
-    #itStart = np.argmin(abs(np.array(field.tfld) - tStart))
-    #itEnd = np.argmin(abs(np.array(field.tfld) - tEnd))
-    #tsteps = itEnd - itStart + 1
-    #phi_tx = np.zeros((tsteps, field.nx), dtype='complex128')
-    #apar_tx = np.zeros((tsteps, field.nx), dtype='complex128')
-    #for timeInd in range(itStart, itEnd + 1):
-    phi_x = np.zeros(field.nx, dtype='complex128')
-    apar_x = np.zeros(field.nx, dtype='complex128')
-    for ky in kygrid:
-        time, this_phi, this_apar = global_eigenfunctions(field, zInd, ky, xInd)#, timeInd)
-        phi_x += this_phi
-        apar_x += this_apar
-    return time, phi_x, apar_x
+    itStart = np.argmin(abs(np.array(field.tfld) - tStart))
+    itEnd = np.argmin(abs(np.array(field.tfld) - tEnd))
+    tsteps = itEnd - itStart + 1
+    tgrid = []
+    phi_tx = np.zeros((tsteps, field.nx), dtype='complex128')
+    apar_tx = np.zeros((tsteps, field.nx), dtype='complex128')
+    for timeInd in range(itStart, itEnd + 1):
+        phi_x = np.zeros(field.nx, dtype='complex128')
+        apar_x = np.zeros(field.nx, dtype='complex128')
+        for ky in kygrid:
+            time, this_phi, this_apar = global_eigenfunctions(field, zInd, ky, xInd, timeInd)
+            phi_x += this_phi
+            apar_x += this_apar
+        phi_tx[timeInd - itStart, :] = phi_x.reshape(1, field.nx)
+        apar_tx[timeInd - itStart, :] = apar_x.reshape(1, field.nx)
+        tgrid.append(time)
+    print len(tgrid)
+    print np.shape(phi_tx)
+    print np.shape(apar_tx)
+    return tgrid, phi_tx, apar_tx

@@ -32,13 +32,18 @@ else:
 show_plots = True
 plot_format = 'display'
 
+tStart = 350.
+tEnd = 390.
 kygrid = range(0, pars['nky0'])
 if 1 == 1:
-    time, phi, apar = reflectometer(field, nz / 2, kygrid, -1)
+    tgrid, phi, apar = reflectometer(field, nz / 2, kygrid, -1, tStart, tEnd)
     if show_plots:
-        title = 'time =' + str(np.round(time,1)) + ' all ky\'s'
+        title = 'xgrid: time, ygrid: x, all ky\'s added'
         filename = 'reflectometer_phi_Apar.ps'
-        doublePlot1D(xgrid, phi, apar, 'phi', 'apar', title, filename, plot_format)
+        #for i in range(len(tgrid)):
+        #    title = 'all ky\'s added, time =' + str(tgrid[i])
+        #    doublePlot1D(xgrid, phi[i,:], apar[i,:], 'phi', 'apar', title, filename, plot_format)
+        doublePlot2D(xgrid, tgrid, phi, apar, 'phi', 'apar', title, filename, plot_format)
 #ky = 5
 
 #for ky in kygrid:
