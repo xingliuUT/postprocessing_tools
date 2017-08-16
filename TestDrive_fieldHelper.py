@@ -16,7 +16,9 @@ if not suffix =='.dat':
 
 pars = init_read_parameters(suffix)
 field = fieldfile('field'+suffix,pars)
+field_step_time(field)
 momen = momfile('mom_e'+suffix,pars)
+momen_step_time(momen)
 
 nz = pars['nz0']
 nx = pars['nx0']

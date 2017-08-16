@@ -51,3 +51,12 @@ def t_avg_global_moms(momen, \
 
     return deln / (itEnd - itStart + 1), tperp / (itEnd - itStart + 1)
 
+def momen_step_time(momen, \
+              show_plots = True):
+    momen_time = momen.tmom
+    step_time = np.array(momen_time[1:-1]) - np.array(momen_time[0:-2])
+    if show_plots:
+        plt.plot(step_time)
+        plt.title('dens, Tperp')
+        plt.ylabel('step time (Lref / cref)')
+        plt.show()

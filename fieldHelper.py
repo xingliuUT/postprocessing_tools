@@ -45,3 +45,12 @@ def t_avg_global_eigenfns(field, \
         apar += this_apar
 
     return phi / (itEnd - itStart + 1), apar / (itEnd - itStart + 1)
+def field_step_time(field, \
+              show_plots = True):
+    field_time = field.tfld
+    step_time = np.array(field_time[1:-1]) - np.array(field_time[0:-2])
+    if show_plots:
+        plt.plot(step_time)
+        plt.title('Phi and Apar')
+        plt.ylabel('step time (Lref / cref)')
+        plt.show()
