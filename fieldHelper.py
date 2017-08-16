@@ -73,7 +73,7 @@ def reflectometer(field, \
         phi_tx[timeInd - itStart, :] = phi_x.reshape(1, field.nx)
         apar_tx[timeInd - itStart, :] = apar_x.reshape(1, field.nx)
         tgrid.append(time)
-    print len(tgrid)
-    print np.shape(phi_tx)
-    print np.shape(apar_tx)
+    #print len(tgrid)
+    #print np.shape(phi_tx)
+    #print np.shape(apar_tx)
     return tgrid, phi_tx, apar_tx

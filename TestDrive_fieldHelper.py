@@ -7,6 +7,7 @@ from fieldHelper import *
 from momHelper import *
 from parIOHelper import *
 from plotHelper import *
+from windowFFT import *
 import sys
 
 suffix = sys.argv[1]
@@ -37,7 +38,10 @@ tEnd = 390.
 kygrid = range(0, pars['nky0'])
 if 1 == 1:
     tgrid, phi, apar = reflectometer(field, nz / 2, kygrid, -1, tStart, tEnd)
-    if show_plots:
+    for i in range(nx):
+        windowFFT(np.array(tgrid), phi[:,i], 'phi, x ='+str(xgrid[i]))
+        windowFFT(np.array(tgrid), apar[:,i], 'apar, x ='+str(xgrid[i]))
+    if 1 == 0:
         title = 'xgrid: time, ygrid: x, all ky\'s added'
         filename = 'reflectometer_phi_Apar.ps'
         #for i in range(len(tgrid)):
