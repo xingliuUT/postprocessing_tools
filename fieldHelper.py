@@ -50,7 +50,7 @@ def field_step_time(field, \
         plt.ylabel('step time (Lref / cref)')
         plt.show()
 
-def reflectometer(field, \
+def field_reflectometer(field, \
                   zInd, \
                   kygrid, \
                   xInd, \

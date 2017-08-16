@@ -32,22 +32,36 @@ else:
 
 show_plots = True
 plot_format = 'display'
+nf = 200
+lf = 1.
 
 tStart = 350.
 tEnd = 390.
-kygrid = range(0, pars['nky0'])
+#kygrid = range(0, pars['nky0'])
+kygrid = [0]
 if 1 == 1:
-    tgrid, phi, apar = reflectometer(field, nz / 2, kygrid, -1, tStart, tEnd)
+    tgrid, dens, tperp = momen_reflectometer(momen, nz / 2, kygrid, -1, tStart, tEnd)
+    for i in range(nx/2, nx, 16):
+#    if 1 == 0:
+        windowFFT(np.array(tgrid), dens[:,i], nf, lf, 'dens, x ='+str(xgrid[i]))
+        windowFFT(np.array(tgrid), tperp[:,i], nf, lf, 'Tperp, x ='+str(xgrid[i]))
+    if 1 == 1:
+        title = 'xgrid: time, ygrid: x, all ky\'s added'
+        filename = 'reflectometer_dens_tperp.ps'
+        doublePlot2D(xgrid, tgrid, dens, tperp, 'dens', 'tperp', title, filename, 'rhot', 't', plot_format)
+if 1 == 0:
+    tgrid, phi, apar = field_reflectometer(field, nz / 2, kygrid, -1, tStart, tEnd)
     for i in range(nx):
+#    if 1 == 0:
         windowFFT(np.array(tgrid), phi[:,i], 'phi, x ='+str(xgrid[i]))
         windowFFT(np.array(tgrid), apar[:,i], 'apar, x ='+str(xgrid[i]))
-    if 1 == 0:
+    if 1 == 1:
         title = 'xgrid: time, ygrid: x, all ky\'s added'
         filename = 'reflectometer_phi_Apar.ps'
         #for i in range(len(tgrid)):
         #    title = 'all ky\'s added, time =' + str(tgrid[i])
         #    doublePlot1D(xgrid, phi[i,:], apar[i,:], 'phi', 'apar', title, filename, plot_format)
-        doublePlot2D(xgrid, tgrid, phi, apar, 'phi', 'apar', title, filename, plot_format)
+        doublePlot2D(xgrid, tgrid, phi, apar, 'phi', 'apar', title, filename, 'rhot', 't', plot_format)
 #ky = 5
 
 #for ky in kygrid:

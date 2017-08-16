@@ -3,15 +3,16 @@ import matplotlib.pyplot as plt
 
 zi = complex(0, 1)
 
-def windowFFT(tgrid, field, tt, show_plots = True):
+def windowFFT(tgrid, field, nf, lf, tt, show_plots = True):
+    nf = int(nf)
+    lf = float(lf)
     tgrid_n = (tgrid - tgrid[0]) / (tgrid[-1] - tgrid[0])
     window = np.cos(np.pi * tgrid_n - np.pi / 2.)
     if 1 == 0:
         plt.plot(tgrid, abs(field)/max(abs(field)))
         plt.plot(tgrid, window)
         plt.show()
-    nf = 200
-    lf = 20.
+
     fgrid = np.linspace(-lf,lf,nf,endpoint = False)
     field_f = np.empty(0, dtype = 'complex128')
     for f in fgrid:
