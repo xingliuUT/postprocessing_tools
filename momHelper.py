@@ -15,9 +15,10 @@ def global_moments(momen, \
     time = momen.tmom[setTime]
     print 'Reading moments are at t = ', time
     nz = momen.pars['nz0']
+    nky = momen.pars['nky0']
     nx = momen.pars['nx0']
-    deln = np.zeros((nz,nx),dtype='complex128')
-    tperp = np.zeros((nz,nx),dtype='complex128')
+#    deln = np.zeros((nz,nx),dtype='complex128')
+#    tperp = np.zeros((nz,nx),dtype='complex128')
     if zInd == -1 and kyInd != -1 and xInd == -1: 
         deln = momen.dens()[0 : nz, kyInd, 0 : nx]
         tperp = momen.tperp()[0 : nz, kyInd, 0 : nx]
@@ -25,8 +26,9 @@ def global_moments(momen, \
         deln = momen.dens()[zInd, kyInd, 0 : nx]
         tperp = momen.tperp()[zInd, kyInd, 0 : nx]
     elif zInd != -1 and kyInd == -1 and  xInd != -1:
-        deln = momen.dens()[zInd, :, xInd]
-        tperp = momen.tperp()[zInd, :, xInd]
+        deln = momen.dens()[zInd, 0 : nky, xInd]
+        tperp = momen.tperp()[zInd, 0 : nky, xInd]
+#    print(np.shape(deln), np.shape(tperp))
     return time, deln, tperp
 
 def t_avg_global_moms(momen, \
@@ -86,6 +88,7 @@ def momen_tx(momen, \
         tperp_tx[timeInd - itStart, :] = tperp_x.reshape(1, nx)
         tgrid.append(time)
     return tgrid, deln_tx, tperp_tx
+
 def momen_fx(field_tx, tgrid, nf, lf):
     tsteps, nx = np.shape(field_tx)
     field_fx = np.zeros((nf, nx), dtype='complex128')
@@ -94,3 +97,30 @@ def momen_fx(field_tx, tgrid, nf, lf):
         field_fx[:, i] = field_f.reshape(nf)
     return fgrid, field_fx
 
+def momen_tky(momen, \
+                  zInd, \
+                  kyInd, \
+                  xInd, \
+                  tStart, \
+                  tEnd):
+
+    itStart = np.argmin(abs(np.array(momen.tmom)-tStart))
+    itEnd = np.argmin(abs(np.array(momen.tmom)-tEnd))
+    tsteps = itEnd - itStart + 1
+    tgrid = []
+    nz = momen.pars['nz0']
+    nky = momen.pars['nky0']
+    nx = momen.pars['nx0']
+    deln_tky = np.zeros((tsteps, nky),dtype='complex128')
+    tperp_tky = np.zeros((tsteps, nky),dtype='complex128')
+
+    for timeInd in range(itStart, itEnd + 1):
+        deln_ky = np.zeros(nky,dtype='complex128')
+        tperp_ky = np.zeros(nky,dtype='complex128')
+        time, this_deln, this_tperp = global_moments(momen, zInd, kyInd, xInd, timeInd)
+        deln_tky[timeInd - itStart, :] = this_deln.reshape(1, nky)
+        tperp_tky[timeInd - itStart, :] = this_tperp.reshape(1, nky)
+        tgrid.append(time)
+    print(len(tgrid))
+    print(np.shape(deln_tky), np.shape(tperp_tky))
+    return tgrid, deln_tky, tperp_tky
