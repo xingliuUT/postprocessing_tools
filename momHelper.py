@@ -84,7 +84,7 @@ def momen_tx(momen, \
     for timeInd in range(itStart, itEnd + 1):
         deln_x = np.zeros(nx,dtype='complex128')
         tperp_x = np.zeros(nx,dtype='complex128')
-        time, dens_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd, True)
+        time, dens_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd) #, True)
         deln_x = dens_xz[zInd,:]
         #for ky in kygrid:
             #time, this_deln, this_tperp = global_moments(momen, zInd, ky, xInd, timeInd)

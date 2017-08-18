@@ -50,7 +50,7 @@ kyInd = -1
 xInd = nx*5/8
 ky = 0
 
-if 1 == 1:
+if 1 == 0:
     dens_naive = np.zeros((nz, nx),dtype='complex128')
     for ky in kygrid:
         time, this_dens, this_tperp = global_moments(momen, -1, ky, -1)
@@ -72,6 +72,7 @@ if 1 == 1:
 #    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
     title = ' '
     filename = 'dens_tx01.ps'
+    dens_tx = dens_tx * pars['rhostar']
     singlePlot2D(xgrid, tgrid, dens_tx, 'dens_tx', title, filename, 'x', 't',plot_format)
 if 1 == 1:
     fgrid, dens_fx = momen_fx(dens_tx, tgrid, nf, lf)
