@@ -1,4 +1,4 @@
-from parIOHelper import init_read_parameters
+#from parIOHelper import init_read_parameters
 from read_write_geometry import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -50,4 +50,13 @@ def ky(pars, geom_coeff, ktheta_cm = -1., show_plots = False):
 
     return ky
 
+def init_global_geometry(suffix, pars):
 
+    geom_type = pars['magn_geometry'][1:-1]
+    geom_file = geom_type + suffix
+    geom_pars, geom_coeff = read_geometry_global(geom_file)
+
+    return geom_type, geom_pars, geom_coeff
+
+def q_Cy(geom_coeff):
+    return geom_coeff['q'], geom_coeff['C_y']
