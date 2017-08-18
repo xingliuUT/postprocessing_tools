@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from momlib import *
+from geomHelper import *
 from windowFFT import *
 
 def global_moments(momen, \
@@ -128,3 +129,14 @@ def momen_tky(momen, \
     print(len(tgrid))
     print(np.shape(deln_tky), np.shape(tperp_tky))
     return tgrid, deln_tky, tperp_tky
+
+def momen_xz(momen, geom_coeff, zgrid, kygrid):
+
+    q, Cy = q_Cy(geom_coeff)
+    qCy = np.array(q * Cy)
+    ymatrix = np.outer(zgrid*np.pi, qCy)
+    dens_xz = np.zeros((len(zgrid), len(q)),dtype='complex128')
+    for ky in kygrid:
+        time, this_dens, this_tperp = global_moments(momen, -1, ky, -1)
+        dens_xz += np.multiply(this_dens, np.exp(zi * ky * ymatrix))
+    return time, dens_xz

@@ -21,6 +21,8 @@ field = fieldfile('field'+suffix,pars)
 #field_step_time(field)
 momen = momfile('mom_e'+suffix,pars)
 #momen_step_time(momen)
+geom_type, geom_pars, geom_coeff = init_global_geometry(suffix, pars)
+
 zi = complex(0, 1)
 nz = pars['nz0']
 nx = pars['nx0']
@@ -46,24 +48,11 @@ kyInd = -1
 xInd = nx*5/8
 ky = 0
 
-geom_type, geom_pars, geom_coeff = init_global_geometry(suffix, pars)
-q, Cy = q_Cy(geom_coeff)
-qCy = np.array(q * Cy)
-#print np.shape(q), np.shape(Cy), np.shape(qCy)
-#print np.shape(zgrid)
-ymatrix = np.outer(zgrid*np.pi, qCy)
-#print np.shape(ymatrix)
-#filename = '0'
-#doublePlot1D(xgrid, q, Cy, 'q', 'Cy', 'geometry coeff', filename, plot_format)
-#if 1 == 1:
-dens_xz = np.zeros((nz, nx),dtype='complex128')
 dens_naive = np.zeros((nz, nx),dtype='complex128')
 for ky in kygrid:
     time, this_dens, this_tperp = global_moments(momen, -1, ky, -1)
-    dens_xz += np.multiply(this_dens, np.exp(zi * ky * ymatrix))
     dens_naive += this_dens
-#    print np.shape(this_dens)
-#    if show_plots:
+time, dens_xz = momen_xz(momen, geom_coeff, zgrid, kygrid)
 if 1 == 1:
     title = 'time =' + str(np.round(time,1))
     filename = 'dens01.ps'
