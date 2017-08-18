@@ -3,6 +3,42 @@ from pylab import rcParams
 
 import numpy as np
 
+def singlePlot2D(xgrid, zgrid, \
+                 field1, \
+                 name1, \
+                 bigtitle, filename, \
+                 xlabel, ylabel, \
+                 output = 'display'):
+
+    rcParams['figure.figsize'] = 8., 8.
+    plt.figure()
+
+    plt.subplot(3,1,1)
+    plt.ylabel(ylabel,fontsize=13)
+    plt.xlabel(xlabel,fontsize=13)
+    plt.title('abs ' + name1)
+    plt.contourf(xgrid,zgrid,np.abs(field1),70)
+    plt.colorbar()
+    plt.subplot(3,1,2)
+    plt.ylabel(ylabel,fontsize=13)
+    plt.xlabel(xlabel,fontsize=13)
+    plt.title('real ' + name1)
+    plt.contourf(xgrid,zgrid,np.real(field1),70)
+    plt.colorbar()
+    plt.subplot(3,1,3)
+    plt.ylabel(ylabel,fontsize=13)
+    plt.xlabel(xlabel,fontsize=13)
+    plt.title('imag ' + name1)
+    plt.contourf(xgrid,zgrid,np.imag(field1),70)
+    plt.colorbar()
+    plt.tight_layout()
+    plt.suptitle(bigtitle)
+    if output == 'display':
+        plt.show()
+    elif output == 'ps':
+        fig=plt.gcf()
+        fig.savefig(filename, format = 'ps', bbox_inches = 'tight')
+
 def doublePlot2D(xgrid, zgrid, \
                  field1, field2, \
                  name1, name2, \
