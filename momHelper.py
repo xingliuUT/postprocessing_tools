@@ -94,7 +94,11 @@ def momen_fx(field_tx, tgrid, nf, lf):
     field_fx = np.zeros((nf, nx), dtype='complex128')
     for i in range(nx):
         fgrid, field_f = windowFFT(np.array(tgrid), field_tx[:,i], nf, lf, str(i/float(nx)))
-        field_fx[:, i] = field_f.reshape(nf)
+        field_f = field_f.reshape(nf)
+        for j in range(nf):
+            field_f[j] = np.minimum(field_f[j], 100)
+        field_fx[:, i] = field_f
+        
     return fgrid, field_fx
 
 def momen_tky(momen, \

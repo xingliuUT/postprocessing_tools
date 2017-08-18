@@ -31,8 +31,8 @@ else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
 show_plots = True
-#plot_format = 'display'
-plot_format = 'ps'
+plot_format = 'display'
+#plot_format = 'ps'
 nf = 200
 lf = 10.
 
@@ -43,6 +43,13 @@ kygrid = range(pars['nky0'])
 zInd = nz/2
 kyInd = -1
 xInd = nx*5/8
+ky = 0
+if 1 == 0:
+    time, phi, apar = global_eigenfunctions(field, -1, ky, -1)
+    if show_plots:
+        title = 'time =' + str(np.round(time,1)) + ', ky index =' + str(ky)
+        filename = 'phi_Apar_ky='+str(ky)+'.ps'
+        doublePlot2D(xgrid, zgrid, phi, apar, 'phi', 'apar', title, filename, 'x', 'z',plot_format)
 if 1 == 1:
     #time, dens, tperp = global_moments(momen,zInd,kyInd,xInd)
     #if show_plots:
@@ -52,14 +59,16 @@ if 1 == 1:
         doublePlot1D(kygrid, dens, tperp, 'n', 'Tperp', title, filename, plot_format)
 
     tgrid, dens_tky, tperp_tky = momen_tky(momen,zInd,kyInd,xInd,tStart,tEnd)
-    if 1 == 1:
+    if 1 == 0:
         title = 'xgrid: time, ygrid: ky, x ='+str(xgrid[xInd])
         filename = 'tky_dens_tperp.ps'
         doublePlot2D(kygrid, tgrid, dens_tky, tperp_tky, 'dens', 'tperp', title, filename, 'ky', 't', plot_format)
-        fgrid, dens_fky = momen_fx(dens_tky, tgrid, nf, lf)
-        fgrid, tperp_fky = momen_fx(tperp_tky, tgrid, nf, lf)
+
+    fgrid, dens_fky = momen_fx(dens_tky, tgrid, nf, lf)
+    fgrid, tperp_fky = momen_fx(tperp_tky, tgrid, nf, lf)
+    if 1 == 1:
         title = 'xgrid: frequency, ygrid: x, all ky\'s added'
-        filename = 'fky_dens_tperp.ps'
+        filename = 'fky_dens_tperp01.ps'
         doublePlot2D(kygrid, fgrid, dens_fky, tperp_fky, 'dens', 'tperp', title, filename, 'ky', 'f', plot_format)
 
 if 1 == 0:
