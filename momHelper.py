@@ -133,7 +133,7 @@ def momen_tky(momen, \
     print(np.shape(deln_tky), np.shape(tperp_tky))
     return tgrid, deln_tky, tperp_tky
 
-def momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd):
+def momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd = -1):
 
     q, Cy = q_Cy(geom_coeff)
     qCy = np.array(q * Cy)
@@ -142,4 +142,6 @@ def momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd):
     for ky in kygrid:
         time, this_dens, this_tperp = global_moments(momen, -1, ky, -1, timeInd)
         dens_xz += np.multiply(this_dens, np.exp(zi * ky * ymatrix))
+        if ky != 0:
+            dens_xz += np.multiply(np.conj(this_dens), np.exp(- zi * ky * ymatrix))
     return time, dens_xz
