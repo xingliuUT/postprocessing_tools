@@ -170,7 +170,7 @@ def read_geometry_global(file_name):
                     this_line = 'q'
 
     nx0 = len(geometry['q'])
-    nz0 = parameters['gridpoints']
+    nz0 = int(parameters['gridpoints'])
     #plt.plot(geometry['gxx'])
     #plt.show()
     geometry['gxx']=geometry['gxx'].reshape((nz0,nx0))
