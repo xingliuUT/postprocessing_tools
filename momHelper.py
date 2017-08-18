@@ -63,9 +63,10 @@ def momen_step_time(momen, \
         plt.ylabel('step time (Lref / cref)')
         plt.show()
 def momen_tx(momen, \
-                  zInd, \
+                  geom_coeff, \
+                  zgrid, \
                   kygrid, \
-                  xInd, \
+                  zInd, \
                   tStart, \
                   tEnd):
 
@@ -76,19 +77,21 @@ def momen_tx(momen, \
     nz = momen.pars['nz0']
     nx = momen.pars['nx0']
     deln_tx = np.zeros((tsteps, nx),dtype='complex128')
-    tperp_tx = np.zeros((tsteps, nx),dtype='complex128')
+#    tperp_tx = np.zeros((tsteps, nx),dtype='complex128')
 
     for timeInd in range(itStart, itEnd + 1):
         deln_x = np.zeros(nx,dtype='complex128')
         tperp_x = np.zeros(nx,dtype='complex128')
-        for ky in kygrid:
-            time, this_deln, this_tperp = global_moments(momen, zInd, ky, xInd, timeInd)
-            deln_x += this_deln
-            tperp_x += this_tperp
+        time, dens_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd)
+        deln_x = dens_xz[zInd,:]
+        #for ky in kygrid:
+            #time, this_deln, this_tperp = global_moments(momen, zInd, ky, xInd, timeInd)
+            #deln_x += this_deln
+            #tperp_x += this_tperp
         deln_tx[timeInd - itStart, :] = deln_x.reshape(1, nx)
-        tperp_tx[timeInd - itStart, :] = tperp_x.reshape(1, nx)
+#        tperp_tx[timeInd - itStart, :] = tperp_x.reshape(1, nx)
         tgrid.append(time)
-    return tgrid, deln_tx, tperp_tx
+    return tgrid, deln_tx#, tperp_tx
 
 def momen_fx(field_tx, tgrid, nf, lf):
     tsteps, nx = np.shape(field_tx)
@@ -130,13 +133,13 @@ def momen_tky(momen, \
     print(np.shape(deln_tky), np.shape(tperp_tky))
     return tgrid, deln_tky, tperp_tky
 
-def momen_xz(momen, geom_coeff, zgrid, kygrid):
+def momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd):
 
     q, Cy = q_Cy(geom_coeff)
     qCy = np.array(q * Cy)
     ymatrix = np.outer(zgrid*np.pi, qCy)
     dens_xz = np.zeros((len(zgrid), len(q)),dtype='complex128')
     for ky in kygrid:
-        time, this_dens, this_tperp = global_moments(momen, -1, ky, -1)
+        time, this_dens, this_tperp = global_moments(momen, -1, ky, -1, timeInd)
         dens_xz += np.multiply(this_dens, np.exp(zi * ky * ymatrix))
     return time, dens_xz
