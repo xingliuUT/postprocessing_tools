@@ -14,7 +14,7 @@ def windowFFT(tgrid, field, nf, lf, tt, show_plots = False):
         plt.show()
 
     #fgrid = np.linspace(-lf,lf,nf,endpoint = False)
-    fgrid = np.linspace(-lf,lf,nf,endpoint = False)
+    fgrid = np.linspace(0,lf,nf,endpoint = False)
     field_f = np.empty(0, dtype = 'complex128')
     for f in fgrid:
         this_field_f = 0.

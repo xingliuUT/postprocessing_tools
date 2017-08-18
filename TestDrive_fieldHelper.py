@@ -31,8 +31,8 @@ else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
 show_plots = True
-plot_format = 'display'
-#plot_format = 'ps'
+#plot_format = 'display'
+plot_format = 'ps'
 nf = 200
 lf = 10.
 
@@ -68,7 +68,7 @@ if 1 == 1:
     fgrid, tperp_fky = momen_fx(tperp_tky, tgrid, nf, lf)
     if 1 == 1:
         title = 'xgrid: frequency, ygrid: x, all ky\'s added'
-        filename = 'fky_dens_tperp01.ps'
+        filename = 'fky_dens_tperp02.ps'
         doublePlot2D(kygrid, fgrid, dens_fky, tperp_fky, 'dens', 'tperp', title, filename, 'ky', 'f', plot_format)
 
 if 1 == 0:
