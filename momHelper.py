@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from momlib import *
 from geomHelper import *
+from plotHelper import *
 from windowFFT import *
 
 def global_moments(momen, \
@@ -66,6 +67,7 @@ def momen_tx(momen, \
                   geom_coeff, \
                   zgrid, \
                   kygrid, \
+                  xgrid, \
                   zInd, \
                   tStart, \
                   tEnd):
@@ -82,7 +84,7 @@ def momen_tx(momen, \
     for timeInd in range(itStart, itEnd + 1):
         deln_x = np.zeros(nx,dtype='complex128')
         tperp_x = np.zeros(nx,dtype='complex128')
-        time, dens_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd)
+        time, dens_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd, True)
         deln_x = dens_xz[zInd,:]
         #for ky in kygrid:
             #time, this_deln, this_tperp = global_moments(momen, zInd, ky, xInd, timeInd)
@@ -133,7 +135,7 @@ def momen_tky(momen, \
     print(np.shape(deln_tky), np.shape(tperp_tky))
     return tgrid, deln_tky, tperp_tky
 
-def momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd = -1):
+def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots = False):
 
     q, Cy = q_Cy(geom_coeff)
     qCy = np.array(q * Cy)
@@ -144,4 +146,8 @@ def momen_xz(momen, geom_coeff, zgrid, kygrid, timeInd = -1):
         dens_xz += np.multiply(this_dens, np.exp(zi * ky * ymatrix))
         if ky != 0:
             dens_xz += np.multiply(np.conj(this_dens), np.exp(- zi * ky * ymatrix))
+    if show_plots:
+        title = 'time =' + str(np.round(time,1))
+        filename = 'tmp.ps'
+        singlePlot2D(xgrid, zgrid, dens_xz, 'dens_xz', title, filename, 'x', 'z', 'display')
     return time, dens_xz
