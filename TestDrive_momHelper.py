@@ -16,6 +16,9 @@ suffix = sys.argv[1]
 if not suffix =='.dat':
    suffix = '_'+suffix
 
+tStart = float(sys.argv[2])
+tEnd = float(sys.argv[3])
+
 pars = init_read_parameters(suffix)
 field = fieldfile('field'+suffix,pars)
 #field_step_time(field)
@@ -41,8 +44,8 @@ lf = 10.
 
 #tStart = 375.
 #tEnd = 385.
-tStart = 351.
-tEnd = 391.
+#tStart = 351.
+#tEnd = 391.
 kygrid = range(pars['nky0'])
 #kygrid = [0]
 zInd = nz/2
@@ -61,7 +64,7 @@ if 1 == 0:
         filename = 'dens_xz02.ps'
         doublePlot2D(xgrid, zgrid, dens_xz, dens_naive, 'dens_xz', 'dens_naive', title, filename, 'x', 'z',plot_format)
 if 1 == 1:
-    tgrid, dens_tx = momen_tx(momen, \
+    tgrid, dens_tx, tperp_tx = momen_tx(momen, \
                   geom_coeff, \
                   zgrid, \
                   kygrid, \
@@ -72,11 +75,14 @@ if 1 == 1:
 #    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
     title = ' '
     filename = 'dens_tx01.ps'
-    dens_tx = dens_tx * pars['rhostar']
-    singlePlot2D(xgrid, tgrid, dens_tx, 'dens_tx', title, filename, 'x', 't',plot_format)
+
+#    singlePlot2D(xgrid, tgrid, dens_tx, 'dens_tx', title, filename, 'x', 't',plot_format)
+    doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
 if 1 == 1:
     fgrid, dens_fx = momen_fx(dens_tx, tgrid, nf, lf)
+    fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
 #    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
     title = ' '
     filename = 'dens_fx01.ps'
-    singlePlot2D(xgrid, fgrid, dens_fx, 'dens_fx', title, filename, 'x', 'f',plot_format)
+#    singlePlot2D(xgrid, fgrid, dens_fx, 'dens_fx', title, filename, 'x', 'f',plot_format)
+    doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'dens_fx', 'tperp_fx', title, filename, 'x', 'f',plot_format)
