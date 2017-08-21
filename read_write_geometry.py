@@ -122,11 +122,13 @@ def read_geometry_global(file_name):
     file_lines = file_raw.split('\n')
 
     parameters = {}
-    for i in range(10):
+    for i in range(9):
         lsplit = file_lines[i+1].split('=')
+        print lsplit
         parameters[lsplit[0].strip()] = float(lsplit[1].strip())
 
-    lsplit = file_lines[11].split('=')
+    lsplit = file_lines[10].split('=')
+    print lsplit
     parameters[lsplit[0].strip()] = lsplit[1].strip()[1:-1]
     
     print parameters
