@@ -8,6 +8,15 @@ from geomHelper import *
 from plotHelper import *
 from windowFFT import *
 
+def momen_step_time(momen, \
+              show_plots = True):
+    momen_time = momen.tmom
+    step_time = np.array(momen_time[1:-1]) - np.array(momen_time[0:-2])
+    if show_plots:
+        plt.plot(step_time)
+        plt.title('dens, Tperp')
+        plt.ylabel('step time (Lref / cref)')
+        plt.show()
 def global_moments(momen, \
                    zInd, \
                    kyInd, \
@@ -29,15 +38,31 @@ def global_moments(momen, \
         deln = momen.dens()[zInd, 0 : nky, xInd]
         tperp = momen.tperp()[zInd, 0 : nky, xInd]
     return time, deln, tperp
-def momen_step_time(momen, \
-              show_plots = True):
-    momen_time = momen.tmom
-    step_time = np.array(momen_time[1:-1]) - np.array(momen_time[0:-2])
+def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots = False):
+
+    q, Cy = q_Cy(geom_coeff)
+    qCy = np.array(q * Cy)
+    ymatrix = np.outer(zgrid*np.pi, qCy)
+    dens_xz = np.zeros((len(zgrid), len(q)),dtype='complex128')
+    tperp_xz = np.zeros((len(zgrid), len(q)),dtype='complex128')
+    kygrid = np.array(kygrid) * momen.pars['kymin']
+#    for ky in kygrid:
+    for i in range(momen.pars['nky0']):
+        time, this_dens, this_tperp = global_moments(momen, -1, i, -1, timeInd)
+        this_dens = this_dens * momen.pars['rhostar']
+        dens_xz += np.multiply(this_dens, np.exp(zi * kygrid[i] * ymatrix))
+        this_tperp = this_tperp * momen.pars['rhostar']
+        tperp_xz += np.multiply(this_tperp, np.exp(zi * kygrid[i] * ymatrix))
+        if i != 0:
+            dens_xz += np.multiply(np.conj(this_dens), np.exp(- zi * kygrid[i] * ymatrix))
+            tperp_xz += np.multiply(np.conj(this_tperp), np.exp(- zi * kygrid[i] * ymatrix))
     if show_plots:
-        plt.plot(step_time)
-        plt.title('dens, Tperp')
-        plt.ylabel('step time (Lref / cref)')
-        plt.show()
+        title = 'time =' + str(np.round(time,1))
+        filename = 'tmp.ps'
+#        singlePlot2D(xgrid, zgrid, dens_xz, 'dens_xz', title, filename, 'x', 'z', 'display')
+        doublePlot2D(xgrid, zgrid, dens_xz, tperp_xz, 'dens_xz', 'tperp_xz', title, filename, 'x', 'z', 'display')
+    return time, dens_xz, tperp_xz
+
 def momen_tx(momen, \
                   geom_coeff, \
                   zgrid, \
@@ -96,25 +121,4 @@ def momen_tky(momen, \
         tperp_tky[timeInd - itStart, :] = this_tperp.reshape(1, nky)
         tgrid.append(time)
     return tgrid, deln_tky, tperp_tky
-def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots = False):
 
-    q, Cy = q_Cy(geom_coeff)
-    qCy = np.array(q * Cy)
-    ymatrix = np.outer(zgrid*np.pi, qCy)
-    dens_xz = np.zeros((len(zgrid), len(q)),dtype='complex128')
-    tperp_xz = np.zeros((len(zgrid), len(q)),dtype='complex128')
-    for ky in kygrid:
-        time, this_dens, this_tperp = global_moments(momen, -1, ky, -1, timeInd)
-        this_dens = this_dens * momen.pars['rhostar']
-        dens_xz += np.multiply(this_dens, np.exp(zi * ky * ymatrix))
-        this_tperp = this_tperp * momen.pars['rhostar']
-        tperp_xz += np.multiply(this_tperp, np.exp(zi * ky * ymatrix))
-        if ky != 0:
-            dens_xz += np.multiply(np.conj(this_dens), np.exp(- zi * ky * ymatrix))
-            tperp_xz += np.multiply(np.conj(this_tperp), np.exp(- zi * ky * ymatrix))
-    if show_plots:
-        title = 'time =' + str(np.round(time,1))
-        filename = 'tmp.ps'
-#        singlePlot2D(xgrid, zgrid, dens_xz, 'dens_xz', title, filename, 'x', 'z', 'display')
-        doublePlot2D(xgrid, zgrid, dens_xz, tperp_xz, 'dens_xz', 'tperp_xz', title, filename, 'x', 'z', 'display')
-    return time, dens_xz, tperp_xz
