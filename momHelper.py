@@ -56,7 +56,7 @@ def global_moments(momen, \
         doublePlot2D(xgrid, zgrid, deln, tperp, 'dens', 'tperp', title, filename, 'x', 'z', plot_format)
     return time, deln, tperp
 def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots = False, plot_format = 'display'):
-    debug = True
+    debug = False
     show_raw_plots = False
     q, Cy = q_Cy(geom_coeff)
     nGrid = np.array(kygrid)*momen.pars['n0_global']
