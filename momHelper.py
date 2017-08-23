@@ -38,7 +38,7 @@ def global_moments(momen, \
         deln = momen.dens()[zInd, 0 : nky, xInd]
         tperp = momen.tperp()[zInd, 0 : nky, xInd]
     return time, deln, tperp
-def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots = False):
+def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots = False, plot_format = 'display'):
 
     q, Cy = q_Cy(geom_coeff)
     qCy = np.array(q * Cy)
@@ -58,9 +58,9 @@ def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots =
             tperp_xz += np.multiply(np.conj(this_tperp), np.exp(- zi * kygrid[i] * ymatrix))
         if show_plots:# and i == momen.pars['nky0'] - 1:
             title = 'ky =' + str(i)
-            filename = 'tmp.ps'
+            filename = 'time ='+str(time)+title+'.ps'
 #            singlePlot2D(xgrid, zgrid, this_dens, 'dens_xz', title, filename, 'x', 'z', 'display')
-            doublePlot2D(xgrid, zgrid, this_dens, this_tperp, 'dens_xz', 'tperp_xz', title, filename, 'x', 'z', 'display')
+            doublePlot2D(xgrid, zgrid, this_dens, this_tperp, 'dens_xz', 'tperp_xz', title, filename, 'x', 'z', plot_format)
     return time, dens_xz, tperp_xz
 
 def momen_tx(momen, \
@@ -71,7 +71,8 @@ def momen_tx(momen, \
                   zInd, \
                   tStart, \
                   tEnd, \
-                  show_xz = False):
+                  show_xz = False, \
+                  plot_format = 'display'):
     itStart = np.argmin(abs(np.array(momen.tmom)-tStart))
     itEnd = np.argmin(abs(np.array(momen.tmom)-tEnd))
     tsteps = itEnd - itStart + 1
@@ -84,7 +85,7 @@ def momen_tx(momen, \
         deln_x = np.zeros(nx,dtype='complex128')
         tperp_x = np.zeros(nx,dtype='complex128')
         if show_xz:
-            time, dens_xz, tperp_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd, True)
+            time, dens_xz, tperp_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd, True, plot_format)
         else:
             time, dens_xz, tperp_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd)
         deln_x = dens_xz[zInd,:]
