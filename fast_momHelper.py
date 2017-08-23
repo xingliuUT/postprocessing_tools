@@ -55,27 +55,9 @@ if 1 == 1:
                   zInd, \
                   tStart, \
                   tEnd, \
-                  True, \
-                  'ps')
+                  False, \
+                  plot_format)
     title = ' '
     filename = 'dens_tx01.ps'
 
     doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
-if 1 == 1:
-    fgrid, dens_fx = momen_fx(dens_tx, tgrid, nf, lf)
-#    fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
-#    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
-    title = ' '
-    filename = 'dens_fx01.ps'
-    singlePlot2D(xgrid, fgrid, dens_fx, 'dens_fx', title, filename, 'x', 'f',plot_format)
-#    doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'dens_fx', 'tperp_fx', title, filename, 'x', 'f',plot_format)
-    np.savetxt('dens_fx.txt', dens_fx.view(float))
-    for i in range(nx / 2, nx * 3 / 4, 8):
-        dens_f = dens_fx[:,i]
-
-        plt.plot(fgrid, abs(dens_f))
-        plt.ylabel('abs dens')
-        plt.xlabel('f')
-        plt.title(str(i))
-        plt.show()
-
