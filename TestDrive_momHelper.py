@@ -20,10 +20,7 @@ tStart = float(sys.argv[2])
 tEnd = float(sys.argv[3])
 
 pars = init_read_parameters(suffix)
-field = fieldfile('field'+suffix,pars)
-#field_step_time(field)
 momen = momfile('mom_e'+suffix,pars)
-#momen_step_time(momen)
 geom_type, geom_pars, geom_coeff = init_global_geometry(suffix, pars)
 
 zi = complex(0, 1)
@@ -42,27 +39,12 @@ plot_format = 'display'
 nf = 200
 lf = 10.
 
-#tStart = 375.
-#tEnd = 385.
-#tStart = 351.
-#tEnd = 391.
 kygrid = range(pars['nky0'])
-#kygrid = [0]
 zInd = nz/2
 kyInd = -1
 xInd = nx*5/8
 ky = 0
 
-if 1 == 0:
-    dens_naive = np.zeros((nz, nx),dtype='complex128')
-    for ky in kygrid:
-        time, this_dens, this_tperp = global_moments(momen, -1, ky, -1)
-        dens_naive += this_dens
-    time, dens_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid)
-    if 1 == 0:
-        title = 'time =' + str(np.round(time,1))
-        filename = 'dens_xz02.ps'
-        doublePlot2D(xgrid, zgrid, dens_xz, dens_naive, 'dens_xz', 'dens_naive', title, filename, 'x', 'z',plot_format)
 if 1 == 1:
     tgrid, dens_tx, tperp_tx = momen_tx(momen, \
                   geom_coeff, \
@@ -71,18 +53,28 @@ if 1 == 1:
                   xgrid, \
                   zInd, \
                   tStart, \
-                  tEnd)
-#    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
+                  tEnd, \
+                  False, \
+                  plot_format)
     title = ' '
     filename = 'dens_tx01.ps'
 
-#    singlePlot2D(xgrid, tgrid, dens_tx, 'dens_tx', title, filename, 'x', 't',plot_format)
     doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
 if 1 == 1:
     fgrid, dens_fx = momen_fx(dens_tx, tgrid, nf, lf)
-    fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
+#    fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
 #    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
     title = ' '
     filename = 'dens_fx01.ps'
-#    singlePlot2D(xgrid, fgrid, dens_fx, 'dens_fx', title, filename, 'x', 'f',plot_format)
-    doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'dens_fx', 'tperp_fx', title, filename, 'x', 'f',plot_format)
+    singlePlot2D(xgrid, fgrid, dens_fx, 'dens_fx', title, filename, 'x', 'f',plot_format)
+#    doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'dens_fx', 'tperp_fx', title, filename, 'x', 'f',plot_format)
+    np.savetxt('dens_fx.txt', dens_fx.view(float))
+    for i in range(nx / 2, nx * 3 / 4, 8):
+        dens_f = dens_fx[:,i]
+
+        plt.plot(fgrid, abs(dens_f))
+        plt.ylabel('abs dens')
+        plt.xlabel('f')
+        plt.title(str(i))
+        plt.show()
+
