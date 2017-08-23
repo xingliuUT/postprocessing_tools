@@ -38,8 +38,20 @@ plot_format = 'display'
 
 kygrid = range(pars['nky0'])
 
-zInd = -1
-xInd = -1
+zInd = nz/2
 
-timeInd = np.argmin(abs(np.array(field.tfld) - tStart))
-time, phi_xz, apar_xz = field_xz(field, geom_coeff, zgrid, kygrid, xgrid, timeInd, True, plot_format)
+if 1 == 1:
+    tgrid, phi_tx, apar_tx = field_tx(field, \
+                  geom_coeff, \
+                  zgrid, \
+                  kygrid, \
+                  xgrid, \
+                  zInd, \
+                  tStart, \
+                  tEnd, \
+                  False, \
+                  plot_format)
+    title = ' '
+    filename = 'dens_tx01.ps'
+
+    doublePlot2D(xgrid, tgrid, phi_tx, apar_tx, 'phi_tx', 'apar_tx', title, filename, 'x', 't',plot_format)
