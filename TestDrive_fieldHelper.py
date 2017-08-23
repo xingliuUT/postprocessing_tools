@@ -17,6 +17,9 @@ if not suffix =='.dat':
    suffix = '_'+suffix
 
 zi = complex(0,1)
+nf = 200
+lf = 5
+
 tStart = float(sys.argv[2])
 tEnd = float(sys.argv[3])
 
@@ -55,3 +58,20 @@ if 1 == 1:
     filename = 'dens_tx01.ps'
 
     doublePlot2D(xgrid, tgrid, phi_tx, apar_tx, 'phi_tx', 'apar_tx', title, filename, 'x', 't',plot_format)
+if 1 == 1:
+    fgrid, phi_fx = momen_fx(phi_tx, tgrid, nf, lf)
+    #fgrid, apar_fx = momen_fx(apar_tx, tgrid, nf, lf)
+    title = ' '
+    filename = 'dens_fx01.ps'
+    singlePlot2D(xgrid, fgrid, phi_fx, 'dens_fx', title, filename, 'x', 'f',plot_format)
+    #doublePlot2D(xgrid, fgrid, phi_fx, apar_fx, 'dens_fx', 'tperp_fx', title, filename, 'x', 'f',plot_format)
+    #np.savetxt('dens_fx.txt', dens_fx.view(float))
+    for i in range(nx / 2, nx * 3 / 4, 8):
+        phi_f = phi_fx[:,i]
+
+        plt.plot(fgrid, abs(phi_f))
+        plt.ylabel('abs dens')
+        plt.xlabel('f')
+        plt.title(str(i))
+        plt.show()
+
