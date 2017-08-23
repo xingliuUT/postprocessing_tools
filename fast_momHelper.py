@@ -37,10 +37,11 @@ show_plots = True
 plot_format = 'display'
 #plot_format = 'ps'
 nf = 200
-lf = 10.
+lf = 1.
 
 kygrid = range(pars['nky0'])
-zInd = nz/2
+#kygrid = [0]
+zInd = 33
 kyInd = -1
 xInd = nx*5/8
 ky = 0
@@ -53,7 +54,9 @@ if 1 == 1:
                   xgrid, \
                   zInd, \
                   tStart, \
-                  tEnd)
+                  tEnd, \
+                  True, \
+                  'ps')
     title = ' '
     filename = 'dens_tx01.ps'
 
