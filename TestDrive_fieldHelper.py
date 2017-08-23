@@ -19,8 +19,7 @@ tStart = float(sys.argv[2])
 tEnd = float(sys.argv[3])
 
 pars = init_read_parameters(suffix)
-momen = momfile('mom_e'+suffix,pars)
-#momen_step_time(momen)
+field = fieldfile('field' + suffix, pars)
 
 nz = pars['nz0']
 nx = pars['nx0']
@@ -29,31 +28,18 @@ if 'lx_a' in pars:
 else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
-#plot_format = 'display'
-plot_format = 'ps'
-nf = 400
-lf = 20.
-minVal = 1.
+plot_format = 'display'
+#plot_format = 'ps'
 
-#kygrid = np.array(range(pars['nky0'])) * pars['kymin']
 kygrid = range(pars['nky0'])
 
-zInd = nz/2
-kyInd = -1
-#xInd = nx / 2
-for xInd in range(nx/2, nx * 3 / 4, 8):
-    print xgrid[xInd]
-    tgrid, dens_tky, tperp_tky = momen_tky(momen,zInd,kyInd,xInd,tStart,tEnd)
-    if 1 == 0:
-        title = 'xgrid: time, ygrid: ky, x ='+str(xgrid[xInd])
-        filename = 'tky_dens_tperp.ps'
-        doublePlot2D(kygrid, tgrid, dens_tky, tperp_tky, 'dens', 'tperp', title, filename, 'ky', 't', plot_format)
+zInd = -1
+xInd = -1
+timeInd = np.argmin(abs(np.array(field.tfld) - tStart))
+for ky in kygrid:
+    time, phi_xz, apar_xz = global_eigenfunctions(field, zInd, ky, xInd, timeInd)
+    title = 'ky=' + str(ky)
+    filename = 'n='+str(ky*6)+'_phi_apar_time='+str(np.round(time,4))+'.ps'
+    doublePlot2D(xgrid, zgrid, phi_xz, apar_xz, 'phi_xz', 'apar_xz', title, filename, 'x', 'z', plot_format)
 
-    fgrid, dens_fky = momen_fx(dens_tky, tgrid, nf, lf)
-#    fgrid, tperp_fky = momen_fx(tperp_tky, tgrid, nf, lf)
-    if 1 == 1:
-        title = ' '
-        filename = 'fky_dens_x='+str(xgrid[xInd])+'.ps'
-#        doublePlot2D(kygrid, fgrid, dens_fky, tperp_fky, 'dens', 'tperp', title, filename, 'ky', 'f', plot_format)
-        singlePlot2D(kygrid, fgrid, dens_fky, 'dens', title, filename, 'ky', 'f', plot_format)
 
