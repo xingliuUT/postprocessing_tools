@@ -55,7 +55,14 @@ def global_moments(momen, \
 #        singlePlot2D(xgrid, zgrid, dens, 'dens_xz', title, filename, 'x', 'z', 'display')
         doublePlot2D(xgrid, zgrid, deln, tperp, 'dens', 'tperp', title, filename, 'x', 'z', plot_format)
     return time, deln, tperp
-def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots = False, plot_format = 'display'):
+def momen_xz(momen, \
+             geom_coeff, \
+             zgrid, \
+             kygrid, \
+             xgrid, \
+             timeInd = -1, \
+             show_plots = False, \
+             plot_format = 'display'):
     debug = False
     show_raw_plots = False
     q, Cy = q_Cy(geom_coeff)
@@ -80,7 +87,7 @@ def momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd = -1, show_plots =
             tperp_xz += np.multiply(np.conj(this_tperp), np.exp(- zi * nGrid[ky] * thetaqMatrix))
     if show_plots:
         title = 'time='+str(np.round(time,4))
-        filename = 'dens_tperp_time='+str(np.round(time,4))+'.ps'
+        filename = 'xz_dens_tperp_time='+str(np.round(time,4))+'.ps'
 #        singlePlot2D(xgrid, zgrid, dens_xz, 'dens_xz', title, filename, 'x', 'z', 'display')
         doublePlot2D(xgrid, zgrid, dens_xz, tperp_xz, 'dens_xz', 'tperp_xz', title, filename, 'x', 'z', plot_format)
     return time, dens_xz, tperp_xz
@@ -103,7 +110,7 @@ def momen_tx(momen, \
     nx = momen.pars['nx0']
     deln_tx = np.zeros((tsteps, nx),dtype='complex128')
     tperp_tx = np.zeros((tsteps, nx),dtype='complex128')
-    for timeInd in range(itStart, itEnd + 1):
+    for timeInd in range(itStart, itEnd + 1, 350):
         deln_x = np.zeros(nx,dtype='complex128')
         tperp_x = np.zeros(nx,dtype='complex128')
         if show_xz:
