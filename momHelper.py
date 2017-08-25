@@ -126,14 +126,6 @@ def momen_tx(momen, \
         filename = 'tx_dens_tperp.ps'
         doublePlot2D(xgrid, tgrid, deln_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
     return tgrid, deln_tx, tperp_tx
-def momen_fx(field_tx, tgrid, nf, lf):
-    tsteps, nx = np.shape(field_tx)
-    field_fx = np.zeros((nf, nx), dtype='complex128')
-    for i in range(nx):
-        fgrid, field_f = windowFFT(np.array(tgrid), field_tx[:,i], nf, lf, str(i/float(nx)))
-        field_f = field_f.reshape(nf)
-        field_fx[:,i] = field_f
-    return fgrid, field_fx
 def momen_rms(tgrid, field_tx, xInd, show_plots = False, plot_format='display'):
     momen_rms = []
     t_rms = []
@@ -150,7 +142,8 @@ def momen_rms(tgrid, field_tx, xInd, show_plots = False, plot_format='display'):
     if show_plots:
         plt.figure()
         title = 'xInd='+str(xInd)
-        filename = 'rms_tperp_xInd='+str(xInd)+'.ps'
+        #filename = 'rms_tperp_xInd='+str(xInd)+'.ps'
+        filename = 'rms_dens_xInd='+str(xInd)+'.ps'
         plt.plot(t_rms, momen_rms)
         plt.xlabel('t')
         plt.title(title)
