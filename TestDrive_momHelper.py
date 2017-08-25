@@ -34,7 +34,6 @@ else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
 show_plots = True
-show_xz = False
 plot_format = 'display'
 #plot_format = 'ps'
 nf = 200
@@ -64,23 +63,11 @@ if 1 == 1:
     #    filename = 'tx_dens_tperp.ps'
     #    doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
 if 1 == 1:
-    fgrid, dens_fx = momen_fx(dens_tx, tgrid, nf, lf)
-    fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
+    plot_format = 'ps'
+    for xInd in range(nx / 4, nx * 3 / 4, 8):
+        fgrid, dens_f = windowFFT(tgrid, dens_tx[:,xInd], nf, lf, 'dens_x=' + str(np.round(xgrid[xInd],4)), show_plots, plot_format)
+        fgrid, tperp_f = windowFFT(tgrid, tperp_tx[:,xInd], nf, lf, 'tperp_' + str(np.round(xgrid[xInd],4)), show_plots, plot_format)
 #    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
-    np.savetxt('dens_fx.txt', dens_fx.view(float))
-    np.savetxt('tperp_fx.txt', tperp_fx.view(float))
-    np.savetxt('fgrid.txt', fgrid)
-    title = ' '
-    filename = 'phi_fx01.ps'
-#    singlePlot2D(xgrid, fgrid, dens_fx, 'phi_fx', title, filename, 'x', 'f',plot_format)
-    doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'phi_fx', 'apar_fx', title, filename, 'x', 'f',plot_format)
-
-    for i in range(nx / 2, nx * 3 / 4, 8):
-        dens_f = dens_fx[:,i]
-
-        plt.plot(fgrid, abs(dens_f))
-        plt.ylabel('abs phi')
-        plt.xlabel('f')
-        plt.title(str(i))
-        plt.show()
-
+#    np.savetxt('dens_fx.txt', dens_fx.view(float))
+#    np.savetxt('tperp_fx.txt', tperp_fx.view(float))
+#    np.savetxt('fgrid.txt', fgrid)
