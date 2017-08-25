@@ -19,8 +19,8 @@ def windowFFT(tgrid, field, nf, lf, tt, show_plots = False):
     for f in fgrid:
         this_field_f = 0.
         for i in range(len(field) - 1):
-            this_field_f += 0.5*(field[i]*np.exp(zi*f*tgrid[i]) + \
-                          field[i + 1]*np.exp(zi*f*tgrid[i + 1])) * \
+            this_field_f += 0.5*(field[i]*np.exp(- zi*f*tgrid[i]) + \
+                          field[i + 1]*np.exp(- zi*f*tgrid[i + 1])) * \
                           (tgrid[i + 1] - tgrid[i])
         field_f = np.append(field_f,this_field_f)
     if show_plots:

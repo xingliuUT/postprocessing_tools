@@ -34,6 +34,7 @@ else:
     xgrid = np.arange(nx)/float(nx-1)*pars['lx'] - pars['lx']/2.0
 
 show_plots = True
+show_xz = False
 plot_format = 'display'
 #plot_format = 'ps'
 nf = 200
@@ -42,8 +43,6 @@ lf = 10.
 kygrid = range(pars['nky0'])
 zInd = nz/2
 kyInd = -1
-xInd = nx*5/8
-ky = 0
 
 if 1 == 1:
     tgrid, dens_tx, tperp_tx = momen_tx(momen, \
@@ -54,26 +53,33 @@ if 1 == 1:
                   zInd, \
                   tStart, \
                   tEnd, \
-                  False, \
+                  show_xz, \
                   plot_format)
-    title = ' '
-    filename = 'dens_tx01.ps'
-
-    doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
+#    np.savetxt('dens_tx.txt', dens_tx.view(float))
+#    np.savetxt('tperp_tx.txt', tperp_tx.view(float))
+#    np.savetxt('tgrid.txt', tgrid)
+    if show_plots:
+#        plot_format = 'ps'
+        title = ' '
+        filename = 'tx_dens_tperp.ps'
+        doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
 if 1 == 1:
     fgrid, dens_fx = momen_fx(dens_tx, tgrid, nf, lf)
-#    fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
+    fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
 #    title = 'tStart='+str(tStart)+', tEnd='+str(tEnd)
-    title = ' '
-    filename = 'dens_fx01.ps'
-    singlePlot2D(xgrid, fgrid, dens_fx, 'dens_fx', title, filename, 'x', 'f',plot_format)
-#    doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'dens_fx', 'tperp_fx', title, filename, 'x', 'f',plot_format)
     np.savetxt('dens_fx.txt', dens_fx.view(float))
+    np.savetxt('tperp_fx.txt', tperp_fx.view(float))
+    np.savetxt('fgrid.txt', fgrid)
+    title = ' '
+    filename = 'phi_fx01.ps'
+#    singlePlot2D(xgrid, fgrid, dens_fx, 'phi_fx', title, filename, 'x', 'f',plot_format)
+    doublePlot2D(xgrid, fgrid, dens_fx, tperp_fx, 'phi_fx', 'apar_fx', title, filename, 'x', 'f',plot_format)
+
     for i in range(nx / 2, nx * 3 / 4, 8):
         dens_f = dens_fx[:,i]
 
         plt.plot(fgrid, abs(dens_f))
-        plt.ylabel('abs dens')
+        plt.ylabel('abs phi')
         plt.xlabel('f')
         plt.title(str(i))
         plt.show()

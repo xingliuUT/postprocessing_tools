@@ -66,7 +66,7 @@ def momen_xz(momen, \
     debug = False
     show_raw_plots = False
     q, Cy = q_Cy(geom_coeff)
-    nGrid = np.array(kygrid)*momen.pars['n0_global']
+    nGrid = np.array(range(momen.pars['nky0']))*momen.pars['n0_global']
     thetaGrid = zgrid * np.pi
     thetaqMatrix = np.outer(thetaGrid, q)
     if debug:
@@ -110,7 +110,7 @@ def momen_tx(momen, \
     nx = momen.pars['nx0']
     deln_tx = np.zeros((tsteps, nx),dtype='complex128')
     tperp_tx = np.zeros((tsteps, nx),dtype='complex128')
-    for timeInd in range(itStart, itEnd + 1, 350):
+    for timeInd in range(itStart, itEnd + 1):
         deln_x = np.zeros(nx,dtype='complex128')
         tperp_x = np.zeros(nx,dtype='complex128')
         if show_xz:
