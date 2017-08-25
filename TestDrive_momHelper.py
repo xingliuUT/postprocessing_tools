@@ -53,16 +53,16 @@ if 1 == 1:
                   zInd, \
                   tStart, \
                   tEnd, \
-                  show_xz, \
+                  show_plots, \
                   plot_format)
 #    np.savetxt('dens_tx.txt', dens_tx.view(float))
 #    np.savetxt('tperp_tx.txt', tperp_tx.view(float))
 #    np.savetxt('tgrid.txt', tgrid)
-    if show_plots:
+    #if show_plots:
 #        plot_format = 'ps'
-        title = ' '
-        filename = 'tx_dens_tperp.ps'
-        doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
+    #    title = ' '
+    #    filename = 'tx_dens_tperp.ps'
+    #    doublePlot2D(xgrid, tgrid, dens_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
 if 1 == 1:
     fgrid, dens_fx = momen_fx(dens_tx, tgrid, nf, lf)
     fgrid, tperp_fx = momen_fx(tperp_tx, tgrid, nf, lf)
