@@ -100,8 +100,9 @@ def momen_tx(momen, \
                   zInd, \
                   tStart, \
                   tEnd, \
-                  show_xz = False, \
+                  show_plots = False, \
                   plot_format = 'display'):
+    show_xz = False
     itStart = np.argmin(abs(np.array(momen.tmom)-tStart))
     itEnd = np.argmin(abs(np.array(momen.tmom)-tEnd))
     tsteps = itEnd - itStart + 1
@@ -113,17 +114,18 @@ def momen_tx(momen, \
     for timeInd in range(itStart, itEnd + 1):
         deln_x = np.zeros(nx,dtype='complex128')
         tperp_x = np.zeros(nx,dtype='complex128')
-        if show_xz:
-            time, dens_xz, tperp_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd, True, plot_format)
-        else:
-            time, dens_xz, tperp_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd)
+        time, dens_xz, tperp_xz = momen_xz(momen, geom_coeff, zgrid, kygrid, xgrid, timeInd, show_xz, plot_format)
+
         deln_x = dens_xz[zInd,:]
         tperp_x = tperp_xz[zInd,:]
         deln_tx[timeInd - itStart, :] = deln_x.reshape(1, nx)
         tperp_tx[timeInd - itStart, :] = tperp_x.reshape(1, nx)
         tgrid.append(time)
+    if show_plots:
+        title = ' '
+        filename = 'tx_dens_tperp.ps'
+        doublePlot2D(xgrid, tgrid, deln_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
     return tgrid, deln_tx, tperp_tx
-
 def momen_fx(field_tx, tgrid, nf, lf):
     tsteps, nx = np.shape(field_tx)
     field_fx = np.zeros((nf, nx), dtype='complex128')
@@ -132,6 +134,32 @@ def momen_fx(field_tx, tgrid, nf, lf):
         field_f = field_f.reshape(nf)
         field_fx[:,i] = field_f
     return fgrid, field_fx
+def momen_rms(tgrid, field_tx, xInd, show_plots = False, plot_format='display'):
+    momen_rms = []
+    t_rms = []
+    numerator = 0.
+    denominator = 0.
+    for i in range(len(tgrid) - 1):
+        numerator += 0.5 * (abs(field_tx[i,xInd])**2 + \
+                    abs(field_tx[i + 1,xInd])**2) * \
+                    (tgrid[i + 1] - tgrid[i])
+        denominator += tgrid[i + 1] - tgrid[i]
+        if i > 10:
+            momen_rms.append(np.sqrt(numerator / denominator))
+            t_rms.append(0.5 * (tgrid[i] + tgrid[i + 1]))
+    if show_plots:
+        plt.figure()
+        title = 'xInd='+str(xInd)
+        filename = 'rms_tperp_xInd='+str(xInd)+'.ps'
+        plt.plot(t_rms, momen_rms)
+        plt.xlabel('t')
+        plt.title(title)
+        if plot_format == 'display':
+            plt.show()
+        elif plot_format == 'ps':
+            fig=plt.gcf()
+            fig.savefig(filename, format = 'ps', bbox_inches = 'tight')
+    return t_rms, momen_rms
 def momen_tky(momen, \
                   zInd, \
                   kyInd, \
