@@ -7,6 +7,7 @@ from momlib import *
 from geomHelper import *
 from plotHelper import *
 from windowFFT import *
+from parIOHelper import *
 
 zi = complex(0, 1)
 
@@ -172,4 +173,16 @@ def momen_tky(momen, \
         tperp_tky[timeInd - itStart, :] = this_tperp.reshape(1, nky)
         tgrid.append(time)
     return tgrid, deln_tky, tperp_tky
-
+def radiometer(fgrid, field_f, start, end, fref):
+    startInd = np.argmin(abs(fgrid - start/fref))
+    endInd = np.argmin(abs(fgrid - end/fref))
+    print start, end
+    print fgrid[startInd] * fref, fgrid[endInd]*fref
+    numerator = 0.
+    denominator = 0.
+    for i in range(startInd, endInd):
+        numerator += 0.5 * (abs(field_f[i])**2 + \
+                     abs(field_f[i + 1])**2) * \
+                     (fgrid[i + 1] - fgrid[i])
+        denominator += fgrid[i + 1] - fgrid[i]
+    return np.sqrt(numerator / denominator)
