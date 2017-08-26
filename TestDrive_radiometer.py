@@ -57,13 +57,22 @@ if 1 == 1:
                   show_plots, \
                   plot_format)
 if 1 == 1:
+    f = open('radiometer.txt','w')
+    sys.stdout = f
+    print 'start time ='+str(tStart)+', end time ='+str(tEnd)
     show_plots = False
     plot_format = 'ps'
     for xInd in range(nx / 4, nx * 3 / 4, 8):
+        print 'x=', xgrid[xInd]
         fgrid, dens_f = windowFFT(tgrid, dens_tx[:,xInd], nf, lf, 'dens_x=' + str(np.round(xgrid[xInd],4)), show_plots, plot_format)
         fgrid, tperp_f = windowFFT(tgrid, tperp_tx[:,xInd], nf, lf, 'tperp_' + str(np.round(xgrid[xInd],4)), show_plots, plot_format)
         wcm = radiometer(fgrid, tperp_f, 50., 300., fref_kHz)
         noise = radiometer(fgrid, tperp_f, 350., 600., fref_kHz)
-        print wcm
-        print noise
-        print wcm - noise
+        print 'relative Tperp fluct level (50 ~ 300 kHz)='+str(np.round(wcm,5))
+        print 'relative Tperp fluct level (350 ~ 600 kHz)='+str(np.round(noise,5))
+        print 'relative Tperp fluct level='+str(np.round(wcm - noise,5))
+        wcm = radiometer(fgrid, dens_f, 50., 300., fref_kHz)
+        noise = radiometer(fgrid, dens_f, 350., 600., fref_kHz)
+        print 'relative dens fluct level (50 ~ 300 kHz)='+str(np.round(wcm,5))
+        print 'relative dens fluct level (350 ~ 600 kHz)='+str(np.round(noise,5))
+        print 'relative dens fluct level='+str(np.round(wcm - noise,5))
