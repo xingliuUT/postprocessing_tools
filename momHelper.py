@@ -176,8 +176,8 @@ def momen_tky(momen, \
 def radiometer(fgrid, field_f, start, end, fref):
     startInd = np.argmin(abs(fgrid - start/fref))
     endInd = np.argmin(abs(fgrid - end/fref))
-    print start, end
-    print fgrid[startInd] * fref, fgrid[endInd]*fref
+    #print start, end
+    #print fgrid[startInd] * fref, fgrid[endInd]*fref
     numerator = 0.
     denominator = 0.
     for i in range(startInd, endInd):
