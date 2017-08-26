@@ -57,5 +57,6 @@ if 1 == 1:
                   plot_format)
     plot_format = 'ps'
     for xInd in range(nx / 4, nx * 3 / 4 + 1, 8):
-        t_rms, tperp_rms = momen_rms(tgrid, tperp_tx, xInd, show_plots, plot_format)
+        #t_rms, tperp_rms = momen_rms(tgrid, tperp_tx, xInd, show_plots, plot_format)
+        t_rms, dens_rms = momen_rms(tgrid, dens_tx, xInd, show_plots, plot_format)
 
