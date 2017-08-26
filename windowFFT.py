@@ -15,9 +15,12 @@ def windowFFT(tgrid, \
     tgrid_n = (tgrid - tgrid[0]) / (tgrid[-1] - tgrid[0])
     window = np.cos(np.pi * tgrid_n - np.pi / 2.)
     if 1 == 0:
-        plt.plot(tgrid, abs(field)/max(abs(field)))
+        plt.plot(tgrid, abs(field), label = 'abs')
+        plt.plot(tgrid, np.real(field), '+-', label = 'real')
+        plt.plot(tgrid, np.imag(field), '+-', label = 'imag')
         plt.plot(tgrid, window)
         plt.title(tt)
+        plt.legend()
         plt.show()
 
     fgrid = np.linspace(-lf,lf,nf,endpoint = False)
@@ -36,10 +39,11 @@ def windowFFT(tgrid, \
         field_f = np.append(field_f, numerator / denominator)
     if show_plots:
         plt.figure()
-        plt.plot(fgrid, abs(field_f))
-        plt.plot(fgrid, np.real(field_f), '+-')
-        plt.plot(fgrid, np.imag(field_f), '+-')
+        plt.plot(fgrid, abs(field_f), label = 'abs')
+        plt.plot(fgrid, np.real(field_f), '+-', label = 'real')
+        plt.plot(fgrid, np.imag(field_f), '+-', label = 'imag')
         plt.xlabel('f (cref/Lref)')
+        plt.legend()
         plt.title(tt)
         if plot_format == 'display':
             plt.show()
