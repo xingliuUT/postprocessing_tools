@@ -66,8 +66,8 @@ if 1 == 1:
     for ky in kygrid:
         fgrid, dens_f = windowFFT(tgrid, dens_tky[:,ky], nf, lf, 'dens_ky=' + str(ky), show_plots, plot_format)
         fgrid, tperp_f = windowFFT(tgrid, tperp_tky[:,ky], nf, lf, 'tperp_ky=' + str(ky), show_plots, plot_format)
-        dens_f = np.minimum(dens_f, 0.01)
-        tperp_f = np.minimum(tperp_f, 0.01)
+        dens_f = np.minimum(dens_f, 0.002)
+        tperp_f = np.minimum(tperp_f, 0.002)
         dens_fky[:,ky] = dens_f.reshape(1, nf)
         tperp_fky[:,ky] = tperp_f.reshape(1, nf)
     doublePlot2D(kygrid, fgrid, dens_fky, tperp_fky, 'dens_fky', 'tperp_fky', title, filename, 'ky', 'f',plot_format)
