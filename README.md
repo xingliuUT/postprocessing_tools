@@ -9,6 +9,10 @@ The code provides the following tools to read its raw output into dictionary:
 * `momlib.py` for reading `mom` files with dens, temp, upar, etc
 * `read_write_geometry.py` for reading `tracer_efit` files with geometric quantities
 
+Using these code to convert raw data into dictionaries, I write more code for specific research interest. Some of the often used code are written as methods in `__Helper.py` code:
+* `parIOHelper.py' has two methods: 
+   * `init\_read\_parameters` makes use of `ParIO.py`
+   * `otherRef` calculates derived reference value
 
 
 ## Usage
