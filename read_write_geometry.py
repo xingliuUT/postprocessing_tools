@@ -62,7 +62,6 @@ def read_geometry_local(file_name):
     geometry['gl_dxdZ'] = np.empty(0)
 
     l += 1
-    #print "l",l
     while file_lines[l]:
         line = file_lines[l].split()
         geometry['ggxx'] = np.append(geometry['ggxx'],float(line[0].strip()))
