@@ -8,6 +8,7 @@ from geomHelper import *
 from plotHelper import *
 
 zi = complex(0,1)
+
 def field_step_time(field, \
                     show_plots = True):
     field_time = field.tfld
@@ -114,3 +115,83 @@ def field_tx(field, \
         apar_tx[timeInd - itStart, :] = apar_x.reshape(1, field.nx)
         tgrid.append(time)
     return tgrid, phi_tx, apar_tx
+
+def local_eigenfunctions(pars, \
+                         suffix, \
+                         center_only = False, \
+                         plot = True, \
+                         setTime = -1):
+
+    field = fieldfile('field'+suffix,pars)
+
+    if (setTime == -1):
+        field.set_time(field.tfld[setTime])
+        print 'Reading eigenfunctions are at t = ', field.tfld[setTime]
+    else:
+        isetTime = np.argmin(abs(np.array(field.tfld)-setTime))
+        field.set_time(field.tfld[isetTime])
+        print 'Reading eigenfunctions are at t = ', field.tfld[isetTime]
+
+    if center_only:
+        ikx_grid = [0]
+        phi = np.zeros(field.nz,dtype='complex128')
+        apar = np.zeros(field.nz,dtype='complex128')
+    else:
+        ikx_grid = np.arange(-field.nx/2+1,field.nx/2+1)
+        phi = np.zeros(field.nx*field.nz,dtype='complex128')
+        apar = np.zeros(field.nx*field.nz,dtype='complex128')
+
+    if 'n0_global' in pars:
+        phase_fac = - np.e ** (- 2. * np.pi * \
+                    zi * pars['n0_global'] * pars['q0'])
+    else:
+        phase_fac = -1.0
+    
+    if pars['shat'] > 0.:
+        for i in ikx_grid:
+	    this_phi = field.phi()[:,0,i] * phase_fac ** i
+	    phi[(i - ikx_grid[0]) * field.nz: \
+                (i - ikx_grid[0] + 1) * field.nz] = this_phi
+            if pars['n_fields'] > 1 and pars['beta'] != 0:
+                this_apar = field.apar()[:,0,i] * phase_fac ** i
+	        apar[(i - ikx_grid[0]) * field.nz: \
+                     (i - ikx_grid[0] + 1) * field.nz] = \
+                this_apar
+    else:
+        for i in ikx_grid:
+	    this_phi = field.phi()[:,0,-i] * phase_fac ** i
+	    phi[(i - ikx_grid[0]) * field.nz: \
+                (i - ikx_grid[0] + 1) * field.nz] = this_phi
+            if pars['n_fields'] > 1 and pars['beta'] != 0:
+	        this_apar = field.apar()[:,0,-i] * phase_fac ** i
+	        apar[(i - ikx_grid[0]) * field.nz: \
+                     (i - ikx_grid[0] + 1) * field.nz] = \
+                this_apar
+
+    # Normalize phi and apar by highest value
+    phi = phi / np.max(abs(field.phi()[:,0,:]))
+    if pars['n_fields'] > 1 and pars['beta'] != 0:
+        apar = apar / np.max(abs(field.apar()[:,0,:]))
+    if plot:
+        if (setTime == -1):
+            figTitle='t = '+ str(field.tfld[setTime])
+        else:
+            figTitle='t = '+ str(field.tfld[isetTime])
+        if center_only:
+            figTitle = figTitle+' center only'
+        else:
+            figTitle = figTitle+' entire simulation domain'
+        plt.plot(np.real(phi),label='Re(phi)')
+        plt.plot(np.imag(phi),label='Im(phi)')
+        plt.plot(abs(phi),label='abs(phi)')
+        plt.title(figTitle)
+        plt.legend()
+        plt.show()
+    if plot and pars['n_fields'] > 1 and pars['beta'] != 0:
+        plt.plot(np.real(apar),label='Re(apar)')
+        plt.plot(np.imag(apar),label='Im(apar)')
+        plt.plot(abs(apar),label='abs(apar)')
+        plt.title(figTitle)
+        plt.legend()
+        plt.show()
+    return phi, apar
