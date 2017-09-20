@@ -168,10 +168,6 @@ def local_eigenfunctions(pars, \
                      (i - ikx_grid[0] + 1) * field.nz] = \
                 this_apar
 
-    # Normalize phi and apar by highest value
-    phi = phi / np.max(abs(field.phi()[:,0,:]))
-    if pars['n_fields'] > 1 and pars['beta'] != 0:
-        apar = apar / np.max(abs(field.apar()[:,0,:]))
     if plot:
         if (setTime == -1):
             figTitle='t = '+ str(field.tfld[setTime])
@@ -195,3 +191,45 @@ def local_eigenfunctions(pars, \
         plt.legend()
         plt.show()
     return phi, apar
+
+def calc_dphidz(pars, geom_coeff, suffix, show_plots = True):
+
+    phi, apar = local_eigenfunctions(pars, suffix, False, False)
+    zgrid, jacobian =  zGrid(geom_coeff, pars, False, False)
+    if 1 == 1:
+        nx = pars['nx0']
+        nz = pars['nz0']
+        if nx % 2 == 1:
+            zgrid = np.linspace(- nx, nx, nx * nz, \
+                         endpoint = False)
+        else :
+            zgrid = np.linspace(- (nx - 1), (nx + 1), \
+                         nx * nz, endpoint = False)
+
+    dphidz_mp = np.zeros(pars['nx0']*pars['nz0'],dtype='complex128')
+    for i in np.arange(len(zgrid)-1):
+        dphidz_mp[i] = (phi[i+1]-phi[i])/(zgrid[i+1]-zgrid[i]) * jacobian[i]
+
+    if show_plots:
+        plt.plot(zgrid, dphidz_mp, label = 'd phi / d z')
+        plt.xlabel('z')
+        plt.legend()
+        plt.show()
+    return zgrid, dphidz_mp, apar
+
+def epar(pars, geom_coeff, suffix, show_plots = True):
+    zgrid, dphidz_mp, apar = calc_dphidz(pars, geom_coeff, suffix)
+    omega_filename = 'omega'+suffix
+    omega_array = np.genfromtxt(omega_filename)
+    #GENE has the convention of omega = -freq+i*gamma
+    omega_complex = np.complex(-omega_array[2],omega_array[1])
+    E_par_sum =sum(abs(-dphidz_mp+zi*omega_complex*apar))/(sum(abs(dphidz_mp))+sum(abs(zi*omega_complex*apar)))
+    print 'E_par = ', E_par_sum
+    E_par =-dphidz_mp+zi*omega_complex*apar
+    if show_plots:
+        plt.plot(zgrid,np.abs(E_par),label=r'$|E_{\parallel}|$',color='black')
+        plt.xlabel('z')
+        plt.legend()
+        plt.title('ky = '+str(pars['kymin']))
+        plt.grid()
+        plt.show()
