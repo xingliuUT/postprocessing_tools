@@ -38,7 +38,6 @@ plot_format = 'display'
 #plot_format = 'ps'
 
 kygrid = range(pars['nky0'])
-#kygrid = [0]
 zInd = nz / 2
 xInd = nx * 5 / 8
 
@@ -54,6 +53,7 @@ if 1 == 1:
                   xInd, \
                   tStart, \
                   tEnd)
+if 1 == 0:
     title = ' '
     filename = 'dens_tky01.ps'
 
@@ -68,7 +68,29 @@ if 1 == 1:
         fgrid, tperp_f = windowFFT(tgrid, tperp_tky[:,ky], nf, lf, 'tperp_ky=' + str(ky), show_plots, plot_format)
         dens_f = np.minimum(dens_f, 0.002)
         tperp_f = np.minimum(tperp_f, 0.002)
+        #dens_f = np.log(dens_f)
+        #tperp_f = np.log(tperp_f)
         dens_fky[:,ky] = dens_f.reshape(1, nf)
         tperp_fky[:,ky] = tperp_f.reshape(1, nf)
-    doublePlot2D(kygrid, fgrid, dens_fky, tperp_fky, 'dens_fky', 'tperp_fky', title, filename, 'ky', 'f',plot_format)
+    #doublePlot2D(kygrid, fgrid, dens_fky, tperp_fky, 'dens_fky', 'tperp_fky', title, filename, 'ky', 'f',plot_format)
+    filename = 'dens_fky01.ps'
+    title = ' '
+if 1 == 1:
+    norm = np.amax(abs(dens_fky))
+    dens_plot = np.log(1. + abs(dens_fky)/norm)
+    f_kHz = np.array(fgrid) * 105.
+    ky_cm = np.arange(0, ny) * pars['kymin'] * 0.338 / 0.063
+    singlePlotABS2D(ky_cm, f_kHz, dens_plot, 'dens_fky', title, filename, 'ky (cm^-1)', 'f (kHz)',plot_format)
 
+if 1 == 1:
+    d0_m = 0.03
+    R_m = 0.68
+    n_grid = pars['n0_global'] * np.arange(0, pars['nky0']) 
+    f_kHz = np.array(fgrid) * 105.
+    filter_GPI = np.exp(- n_grid * d0_m / R_m)
+    dens_fky_filtered = dens_fky * filter_GPI
+    ky_cm = np.arange(0, ny) * pars['kymin'] * 0.338 / 0.063
+
+    norm = np.amax(abs(dens_fky_filtered))
+    dens_filtered_plot = np.log(1. + abs(dens_fky_filtered)/norm)
+    singlePlotABS2D(ky_cm, f_kHz, dens_filtered_plot, 'dens_fky', title, filename, 'ky (cm^-1)', 'f (kHz)',plot_format)
