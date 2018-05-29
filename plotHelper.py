@@ -3,6 +3,32 @@ from pylab import rcParams
 
 import numpy as np
 
+def singlePlotABS2D(xgrid, zgrid, \
+                 field1, \
+                 name1, \
+                 bigtitle, filename, \
+                 xlabel, ylabel, \
+                 output = 'display'):
+
+    rcParams['figure.figsize'] = 8., 8.
+    plt.figure()
+
+    #plt.ylabel(ylabel,fontsize=13)
+    #plt.xlabel(xlabel,fontsize=13)
+    #plt.title('abs ' + name1)
+    plt.contourf(xgrid,zgrid,np.abs(field1),100, cmap = "coolwarm")
+    plt.tick_params(axis='both',which='major',labelsize=20,\
+        length=5,width=2,direction='out')
+    plt.locator_params(nbins = 7)
+    #plt.colorbar()
+    plt.tight_layout()
+    plt.suptitle(bigtitle)
+    if output == 'display':
+        plt.show()
+    elif output == 'ps':
+        fig=plt.gcf()
+        fig.savefig(filename, format = 'ps', bbox_inches = 'tight')
+
 def singlePlot2D(xgrid, zgrid, \
                  field1, \
                  name1, \
@@ -17,7 +43,7 @@ def singlePlot2D(xgrid, zgrid, \
     plt.ylabel(ylabel,fontsize=13)
     plt.xlabel(xlabel,fontsize=13)
     plt.title('abs ' + name1)
-    plt.contourf(xgrid,zgrid,np.abs(field1),70)
+    plt.contourf(xgrid,zgrid,np.abs(field1),70, cmap = 'Blues')
     plt.colorbar()
     plt.subplot(3,1,2)
     plt.ylabel(ylabel,fontsize=13)
