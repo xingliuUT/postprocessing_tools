@@ -48,6 +48,9 @@ def global_moments(momen, \
     elif zInd != -1 and kyInd == -1 and  xInd != -1:
         deln = momen.dens()[zInd, 0 : nky, xInd]
         tperp = momen.tperp()[zInd, 0 : nky, xInd]
+    elif zInd != -1 and kyInd != -1 and  xInd != -1:
+        deln = momen.dens()[zInd, kyInd, xInd]
+        tperp = momen.tperp()[zInd, kyInd, xInd]
     deln = deln * momen.pars['rhostar']
     tperp = tperp * momen.pars['rhostar']
     if show_plots:# and i == momen.pars['nky0'] - 1:
@@ -127,7 +130,7 @@ def momen_tx(momen, \
         filename = 'tx_dens_tperp.ps'
         doublePlot2D(xgrid, tgrid, deln_tx, tperp_tx, 'dens_tx', 'tperp_tx', title, filename, 'x', 't',plot_format)
     return tgrid, deln_tx, tperp_tx
-def momen_rms(tgrid, field_tx, xInd, show_plots = False, plot_format='display'):
+def momen_rms(tgrid, field_tx, xInd, xgrid, title, show_plots = False, plot_format='display'):
     momen_rms = []
     t_rms = []
     numerator = 0.
@@ -142,9 +145,9 @@ def momen_rms(tgrid, field_tx, xInd, show_plots = False, plot_format='display'):
             t_rms.append(0.5 * (tgrid[i] + tgrid[i + 1]))
     if show_plots:
         plt.figure()
-        title = 'xInd='+str(xInd)
+        title = title + str(np.round(xgrid[xInd],4))
         #filename = 'rms_tperp_xInd='+str(xInd)+'.ps'
-        filename = 'rms_dens_xInd='+str(xInd)+'.ps'
+        filename = 'rms_dens_x='+str(np.round(xgrid[xInd],4))+'.ps'
         plt.plot(t_rms, momen_rms)
         plt.xlabel('t')
         plt.title(title)
